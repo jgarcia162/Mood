@@ -1,5 +1,7 @@
 package com.example.android.mood.model.aeris;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,14 +9,15 @@ import java.util.List;
  */
 
 public class AerisResponse {
-    private AerisLocation loc;
-    private List<AerisPeriod> periods;
+    private boolean success;
+    @SerializedName("response")
+    private List<AerisResults> results;
 
-    public AerisLocation getLoc() {
-        return loc;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public List<AerisPeriod> getPeriods() {
-        return periods;
+    public List<AerisResults> getResults() {
+        return results;
     }
 }

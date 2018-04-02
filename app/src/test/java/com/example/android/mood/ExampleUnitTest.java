@@ -2,7 +2,7 @@ package com.example.android.mood;
 
 import com.example.android.mood.model.poetry.Poem;
 import com.example.android.mood.model.aeris.AerisConstants;
-import com.example.android.mood.model.aeris.AerisResponse;
+import com.example.android.mood.model.aeris.AerisResults;
 import com.example.android.mood.network.AerisService;
 import com.example.android.mood.network.PoetryService;
 import com.example.android.mood.network.RetrofitFactory;
@@ -30,17 +30,17 @@ public class ExampleUnitTest {
     public void weatherTest() {
         Retrofit retrofit = RetrofitFactory.getAerisInstance();
         AerisService service = retrofit.create(AerisService.class);
-        Call<AerisResponse> call = service.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
+        Call<AerisResults> call = service.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
 
-        call.enqueue(new Callback<AerisResponse>() {
+        call.enqueue(new Callback<AerisResults>() {
             @Override
-            public void onResponse(Call<AerisResponse> call, Response<AerisResponse> response) {
+            public void onResponse(Call<AerisResults> call, Response<AerisResults> response) {
                 assertNotEquals(null, response.body());
                 System.out.println(response.body());
             }
 
             @Override
-            public void onFailure(Call<AerisResponse> call, Throwable t) {
+            public void onFailure(Call<AerisResults> call, Throwable t) {
                 t.printStackTrace();
             }
         });

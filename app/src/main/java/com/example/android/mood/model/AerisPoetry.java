@@ -10,4 +10,17 @@ import com.example.android.mood.model.poetry.Poem;
 public class AerisPoetry {
     private AerisPeriod aerisPeriod;
     private Poem poem;
+
+    public AerisPoetry(AerisPeriod aerisPeriod, Poem poem) {
+        this.aerisPeriod = aerisPeriod;
+        this.poem = poem;
+    }
+
+    public AerisPeriod getAerisPeriod() {
+        return aerisPeriod;
+    }
+
+    public Poem getPoem() {
+        return poem;
+    }
 }

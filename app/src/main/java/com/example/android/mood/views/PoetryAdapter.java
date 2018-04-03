@@ -58,7 +58,15 @@ public class PoetryAdapter extends RecyclerView.Adapter<PoetryAdapter.PoetryView
         public void bind(AerisPoetry data) {
             weatherTitleTV.setText(data.getAerisPeriod().getWeatherPrimary());
             poemTitleTV.setText(data.getPoem().getTitle());
-            linesTV.setText(data.getPoem().getLines()[1]);
+            linesTV.setText(getPoem(data.getPoem().getLines()));
+        }
+
+        private String getPoem(String[] lines){
+            StringBuilder sb = new StringBuilder();
+            for (String line : lines) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
         }
     }
 }

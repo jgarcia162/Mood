@@ -1,6 +1,8 @@
 package com.example.android.mood;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     public RecyclerView recyclerView;
     private List<Poem> poemList;
-    private List<AerisPeriod> weatherList;
+    private List<AerisPeriod> weatherList = new ArrayList<>();
     private List<AerisPoetry> dataSet = new ArrayList<>();
-    private Random randomPoemIndexGenerator;
+    private Random randomPoemIndexGenerator = new Random();
+    private int randomPoemIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,46 +55,51 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "getPoems: " + call.request());
         call.enqueue(new Callback<List<Poem>>() {
             @Override
-            public void onResponse(Call<List<Poem>> call, Response<List<Poem>> response) {
+            public void onResponse(@NonNull Call<List<Poem>> call, @NonNull Response<List<Poem>> response) {
                 poemList = response.body();
                 assert poemList != null;
-//                randomPoemIndexGenerator = new Random(poemList.size() + 1);
+                Log.d(TAG, "onResponse: " + poemList.size());
+                randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
+                Log.d(TAG, "onResponse: " + randomPoemIndex);
                 getWeather();
             }
 
             @Override
-            public void onFailure(Call<List<Poem>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Poem>> call, @NonNull Throwable t) {
                 t.printStackTrace();
             }
         });
     }
 
     private void getWeather() {
-        Log.d(TAG, "getWeather: ");
         Retrofit weatherRetrofit = RetrofitFactory.getAerisInstance();
         AerisService aerisService = weatherRetrofit.create(AerisService.class);
         Call<AerisResponse> aerisResponseCall = aerisService.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
-        Log.d("STUFF", "getWeather: " + aerisResponseCall.request());
         aerisResponseCall.enqueue(new Callback<AerisResponse>() {
             @Override
-            public void onResponse(Call<AerisResponse> call, Response<AerisResponse> response) {
+            public void onResponse(@NonNull Call<AerisResponse> call, @Nullable Response<AerisResponse> response) {
+                assert response != null;
                 weatherList = response.body().getResults().get(0).getPeriods();
                 setUpRecyclerView();
             }
 
             @Override
-            public void onFailure(Call<AerisResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<AerisResponse> call, @NonNull Throwable t) {
                 t.printStackTrace();
             }
         });
     }
 
     private List<AerisPoetry> createAerisPoetryList() {
-        for (AerisPeriod period : weatherList) {
-            dataSet.add(new AerisPoetry(period, poemList.get(1)));
+        Log.d(TAG, "createAerisPoetryList: " + poemList.size());
+        Log.d(TAG, "createAerisPoetryList: " + randomPoemIndex);
+        for (int i = 0; i < weatherList.size(); i++) {
+            dataSet.add(new AerisPoetry(weatherList.get(i), poemList.get(randomPoemIndex)));
+            randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         }
         return dataSet;
     }
+
 
     private void setUpRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);

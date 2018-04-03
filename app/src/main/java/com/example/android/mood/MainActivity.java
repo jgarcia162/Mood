@@ -91,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<AerisPoetry> createAerisPoetryList() {
-        Log.d(TAG, "createAerisPoetryList: " + poemList.size());
-        Log.d(TAG, "createAerisPoetryList: " + randomPoemIndex);
+        //TODO avoid repeated poems
         for (int i = 0; i < weatherList.size(); i++) {
             dataSet.add(new AerisPoetry(weatherList.get(i), poemList.get(randomPoemIndex)));
             randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
@@ -105,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(new PoetryAdapter(createAerisPoetryList()));
-
     }
 }
+
+//TODO add viewpager for poems history and current weather data
+//TODO SQL database

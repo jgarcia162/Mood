@@ -3,3 +3,4 @@
 .idea
 .idea/workspace.xml
 /src/main/java/com/example/android/mood/model/poetry/PoetryConstants.java
+/src/main/java/com/example/android/mood/model/aeris/AerisConstants.java

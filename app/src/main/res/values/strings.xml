@@ -3,4 +3,5 @@
     <string name="error">Something went wrong :(</string>
     <string name="weather">Weather</string>
     <string name="poems">Poems</string>
+    <string name="weather_title">%1$s  \n  %2$d  %3$d</string>
 </resources>

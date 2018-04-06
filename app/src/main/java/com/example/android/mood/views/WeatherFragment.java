@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.mood.R;
-import com.example.android.mood.model.AerisPoetry;
+import com.example.android.mood.model.WeatherPoetry;
 import com.example.android.mood.model.aeris.AerisPeriod;
 import com.example.android.mood.model.poetry.Poem;
 import com.example.android.mood.network.DataFetcher;
@@ -33,7 +33,7 @@ public class WeatherFragment extends Fragment implements DataListener{
     public RecyclerView recyclerView;
     private List<Poem> poemList;
     private List<AerisPeriod> weatherList = new ArrayList<>();
-    private List<AerisPoetry> dataSet = new ArrayList<>();
+    private List<WeatherPoetry> dataSet = new ArrayList<>();
     private Random randomPoemIndexGenerator = new Random();
     private int randomPoemIndex;
     private DataFetcher dataFetcher;
@@ -52,10 +52,10 @@ public class WeatherFragment extends Fragment implements DataListener{
         dataFetcher.getPoems();
     }
 
-    private List<AerisPoetry> createAerisPoetryList() {
+    private List<WeatherPoetry> createAerisPoetryList() {
         //TODO avoid repeated poems
         for (int i = 0; i < weatherList.size(); i++) {
-            dataSet.add(new AerisPoetry(weatherList.get(i), poemList.get(randomPoemIndex)));
+            dataSet.add(new WeatherPoetry(weatherList.get(i), poemList.get(randomPoemIndex)));
             randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         }
         return dataSet;

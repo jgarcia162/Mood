@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.mood.R;
-import com.example.android.mood.model.AerisPoetry;
+import com.example.android.mood.model.WeatherPoetry;
+import com.example.android.mood.model.aeris.AerisPeriod;
+import com.example.android.mood.model.poetry.Poem;
 
 import java.util.List;
 
@@ -20,15 +22,15 @@ import butterknife.ButterKnife;
 
 public class PoetryAdapter extends RecyclerView.Adapter<PoetryAdapter.PoetryViewHolder> {
 
-    private List<AerisPoetry> dataSet;
+    private List<WeatherPoetry> dataSet;
 
-    public PoetryAdapter(List<AerisPoetry> dataSet) {
+    public PoetryAdapter(List<WeatherPoetry> dataSet) {
         this.dataSet = dataSet;
     }
 
     @Override
     public PoetryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new PoetryViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view,parent,false));
+        return new PoetryViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_item_view,parent,false));
     }
 
     @Override
@@ -55,10 +57,12 @@ public class PoetryAdapter extends RecyclerView.Adapter<PoetryAdapter.PoetryView
             ButterKnife.bind(this,itemView);
         }
 
-        public void bind(AerisPoetry data) {
-            weatherTitleTV.setText(data.getAerisPeriod().getWeatherPrimary());
-            poemTitleTV.setText(data.getPoem().getTitle());
-            linesTV.setText(getPoem(data.getPoem().getLines()));
+        public void bind(WeatherPoetry data) {
+            AerisPeriod weatherData = (AerisPeriod) data.getWeather();
+            Poem poemData = (Poem) data.getPoem();
+            weatherTitleTV.setText(weatherData.getWeatherPrimary());
+            poemTitleTV.setText(poemData.getTitle());
+            linesTV.setText(getPoem(poemData.getLines()));
         }
 
         private String getPoem(String[] lines){

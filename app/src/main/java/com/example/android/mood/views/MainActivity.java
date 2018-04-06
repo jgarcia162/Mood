@@ -30,5 +30,4 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-//TODO add viewpager for poems history and current weather data
 //TODO SQL database

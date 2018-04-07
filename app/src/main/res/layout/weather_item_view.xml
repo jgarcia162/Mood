@@ -51,6 +51,16 @@
             android:textStyle="bold"
             tools:text="Poem Title" />
 
+        <ImageView
+            android:id="@+id/toggle_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/poem_lines_tv"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/ellipses"/>
+
         <TextView
             android:id="@+id/poem_lines_tv"
             android:layout_width="wrap_content"

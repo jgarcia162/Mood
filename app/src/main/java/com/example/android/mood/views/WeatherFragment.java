@@ -65,7 +65,7 @@ public class WeatherFragment extends Fragment implements DataListener{
     private void setUpRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new WeatherAdapter(createAerisPoetryList()));
+        recyclerView.setAdapter(new WeatherAdapter(createAerisPoetryList(),recyclerView));
     }
 
     @Override

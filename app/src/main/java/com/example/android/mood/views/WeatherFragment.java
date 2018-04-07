@@ -70,6 +70,7 @@ public class WeatherFragment extends Fragment implements DataListener{
 
     @Override
     public void onForecastFetched(List<AerisPeriod> forecast) {
+        //TODO save to DB
         weatherList = forecast;
         setUpRecyclerView();
     }

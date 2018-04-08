@@ -13,6 +13,7 @@ import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoetry;
 import com.example.android.mood.model.aeris.AerisPeriod;
 import com.example.android.mood.model.poetry.Poem;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     private List<WeatherPoetry> dataSet;
     private RecyclerView recyclerView;
-
+    private Gson gson = new Gson();
 
     public WeatherAdapter(List<WeatherPoetry> dataSet, RecyclerView recyclerView) {
         this.dataSet = dataSet;
@@ -96,8 +97,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         }
 
         public void bind(WeatherPoetry data) {
-            AerisPeriod weatherData = (AerisPeriod) data.getWeather();
-            Poem poemData = (Poem) data.getPoem();
+            AerisPeriod weatherData = gson.fromJson(data.getWeather(),AerisPeriod.class);
+            Poem poemData = gson.fromJson(data.getPoem(),Poem.class);
 
             //TODO get day value of timestamp
             dateTV.setText(String.valueOf(weatherData.getTimestamp()));

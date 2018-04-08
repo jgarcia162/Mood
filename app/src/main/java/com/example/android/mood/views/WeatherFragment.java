@@ -101,6 +101,7 @@ public class WeatherFragment extends Fragment implements DataListener {
     public void onAllDataFetched(List<WeatherPoetry> data) {
         MoodDatabase database = Room.databaseBuilder(context, MoodDatabase.class,context.getString(R.string.database_name)).build();
         setUpRecyclerView(data);
+        //TODO run in background with RxJava
         database.weatherPoetryDao().insertAll(data);
     }
 }

@@ -21,14 +21,22 @@ public class WeatherPoetry {
         this.poem = poem;
     }
 
+    public int getTid() {
+        return tid;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int tid;
 
-    public Object getWeather() {
+    public String getWeather() {
         return weather;
     }
 
-    public Object getPoem() {
+    public String getPoem() {
         return poem;
+    }
+
+    public void setTid(int tid) {
+        this.tid = tid;
     }
 }

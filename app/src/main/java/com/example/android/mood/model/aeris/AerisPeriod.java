@@ -12,14 +12,9 @@ public class AerisPeriod {
     private int maxTempF;
     private int minTempC;
     private int minTempF;
-    private int uvi;
-    private int feelsLikeC;
-    private int feelsLikeF;
     @SerializedName("weather")
     private String weatherDescription;
     private String weatherPrimary;
-    private long sunrise;
-    private long sunset;
 
     public long getTimestamp() {
         return timestamp;
@@ -41,31 +36,11 @@ public class AerisPeriod {
         return minTempF;
     }
 
-    public int getUvi() {
-        return uvi;
-    }
-
-    public int getFeelsLikeC() {
-        return feelsLikeC;
-    }
-
-    public int getFeelsLikeF() {
-        return feelsLikeF;
-    }
-
     public String getWeatherDescription() {
         return weatherDescription;
     }
 
     public String getWeatherPrimary() {
         return weatherPrimary;
-    }
-
-    public long getSunrise() {
-        return sunrise;
-    }
-
-    public long getSunset() {
-        return sunset;
     }
 }

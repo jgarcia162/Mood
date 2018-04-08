@@ -1,5 +1,7 @@
 package com.example.android.mood.views;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import com.example.android.mood.model.aeris.AerisPeriod;
 import com.example.android.mood.model.poetry.Poem;
 import com.example.android.mood.network.DataFetcher;
 import com.example.android.mood.network.DataListener;
+import com.example.android.mood.room.MoodDatabase;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by Joe on 4/3/18.
  */
 
-public class WeatherFragment extends Fragment implements DataListener{
+public class WeatherFragment extends Fragment implements DataListener {
     private final String TAG = getClass().getCanonicalName();
     @BindView(R.id.recycler_view)
     public RecyclerView recyclerView;
@@ -37,12 +41,22 @@ public class WeatherFragment extends Fragment implements DataListener{
     private Random randomPoemIndexGenerator = new Random();
     private int randomPoemIndex;
     private DataFetcher dataFetcher;
+    private Context context;
+    private Gson gson;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getContext();
+        gson = new Gson();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_weather,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -55,24 +69,25 @@ public class WeatherFragment extends Fragment implements DataListener{
     private List<WeatherPoetry> createAerisPoetryList() {
         //TODO avoid repeated poems
         for (int i = 0; i < weatherList.size(); i++) {
-            dataSet.add(new WeatherPoetry(weatherList.get(i), poemList.get(randomPoemIndex)));
+            String weatherJsonString = gson.toJson(weatherList.get(i));
+            String poemJsonString = gson.toJson(poemList.get(randomPoemIndex));
+            dataSet.add(new WeatherPoetry(weatherJsonString, poemJsonString));
             randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         }
         return dataSet;
     }
 
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new WeatherAdapter(createAerisPoetryList(),recyclerView));
+        recyclerView.setAdapter(new WeatherAdapter(dataSet, recyclerView));
     }
 
     @Override
     public void onForecastFetched(List<AerisPeriod> forecast) {
-        //TODO save to DB
         weatherList = forecast;
-        setUpRecyclerView();
+        onAllDataFetched(createAerisPoetryList());
     }
 
     @Override
@@ -80,5 +95,12 @@ public class WeatherFragment extends Fragment implements DataListener{
         poemList = poems;
         randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         dataFetcher.getForecast();
+    }
+
+    @Override
+    public void onAllDataFetched(List<WeatherPoetry> data) {
+        MoodDatabase database = Room.databaseBuilder(context, MoodDatabase.class,context.getString(R.string.database_name)).build();
+        setUpRecyclerView(data);
+        database.weatherPoetryDao().insertAll(data);
     }
 }

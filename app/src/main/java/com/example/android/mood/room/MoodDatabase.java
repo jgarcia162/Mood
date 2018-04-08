@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoetry;
 
 /**
@@ -20,7 +21,7 @@ public abstract class MoodDatabase extends RoomDatabase {
     public static MoodDatabase getInstance(Context context) {
         if (database == null) {
             database = Room.databaseBuilder(context.getApplicationContext(),
-                    MoodDatabase.class, "mood-database").build();
+                    MoodDatabase.class, context.getString(R.string.database_name)).build();
         }
         return database;
     }

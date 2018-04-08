@@ -15,15 +15,16 @@ import java.util.List;
 
 @Dao
 public interface WeatherPoetryDao {
-    @Query("SELECT * FROM poems")
+    @Query("SELECT * FROM weatherpoetry")
     List<WeatherPoetry> getAll();
-
-    @Query("SELECT COUNT(*) FROM poems")
-    int getTicketCount();
 
     @Insert
     void insert(WeatherPoetry... weatherPoetry);
 
+    @Insert
+    void insertAll(List<WeatherPoetry> weatherPoetryList);
+
     @Delete
     void delete(WeatherPoetry weatherPoetry);
+
 }

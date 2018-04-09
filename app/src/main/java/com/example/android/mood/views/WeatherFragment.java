@@ -1,6 +1,5 @@
 package com.example.android.mood.views;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -53,7 +52,7 @@ public class WeatherFragment extends Fragment implements DataListener {
         super.onCreate(savedInstanceState);
         context = getContext();
         gson = new Gson();
-        database = Room.databaseBuilder(context, MoodDatabase.class, context.getString(R.string.database_name)).build();
+        database = MoodDatabase.getInstance(context);
     }
 
     @Nullable
@@ -105,7 +104,7 @@ public class WeatherFragment extends Fragment implements DataListener {
     public void onAllDataFetched() {
         setUpRecyclerView(createAerisPoetryList());
         //TODO run in background with RxJava
-        final Executor executor = Executors.newFixedThreadPool(2);
+        Executor executor = Executors.newFixedThreadPool(2);
         executor.execute(() -> {
             database.weatherPoetryDao().insertAll(dataSet);
 

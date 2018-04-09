@@ -104,15 +104,9 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             dateTV.setText(String.valueOf(weatherData.getTimestamp()));
             weatherTV.setText(itemView.getContext().getResources().getString(R.string.weather_title, weatherData.getWeatherPrimary(), weatherData.getMaxTempF(), weatherData.getMinTempF()));
             poemTitleTV.setText(poemData.getTitle());
-            linesTV.setText(getPoem(poemData.getLines()));
+            linesTV.setText(poemData.getFullPoem());
         }
 
-        private String getPoem(String[] lines) {
-            StringBuilder sb = new StringBuilder();
-            for (String line : lines) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        }
+
     }
 }

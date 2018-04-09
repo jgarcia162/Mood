@@ -20,4 +20,12 @@ public class Poem {
     public String[] getLines() {
         return lines;
     }
+
+    public String getFullPoem() {
+        StringBuilder sb = new StringBuilder();
+        for (String line : this.lines) {
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
+    }
 }

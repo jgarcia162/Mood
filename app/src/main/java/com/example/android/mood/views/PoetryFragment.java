@@ -1,15 +1,23 @@
 package com.example.android.mood.views;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.mood.R;
+import com.example.android.mood.model.WeatherPoetry;
+import com.example.android.mood.room.MoodDatabase;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,6 +29,16 @@ import butterknife.ButterKnife;
 public class PoetryFragment extends Fragment {
     @BindView(R.id.poems_rv)
     public RecyclerView poemsRecyclerView;
+    private MoodDatabase database;
+    private Context context;
+    private List<WeatherPoetry> poemsList;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getContext();
+        database = MoodDatabase.getInstance(context);
+    }
 
     @Nullable
     @Override
@@ -34,5 +52,27 @@ public class PoetryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //TODO get poems from DB and populate RV
+        getPoemsFromDB();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void getPoemsFromDB() {
+        new AsyncTask<Void,Void,List<WeatherPoetry>>(){
+            @Override
+            protected List<WeatherPoetry> doInBackground(Void... voids) {
+                return database.weatherPoetryDao().getAll();
+            }
+
+            @Override
+            protected void onPostExecute(List<WeatherPoetry> weatherPoetryList) {
+                setUpRecyclerView(weatherPoetryList);
+            }
+        }.execute();
+    }
+
+    private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        poemsRecyclerView.setLayoutManager(manager);
+        poemsRecyclerView.setAdapter(new PoemAdapter(dataSet));
     }
 }

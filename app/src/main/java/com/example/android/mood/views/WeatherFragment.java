@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +45,7 @@ public class WeatherFragment extends Fragment implements DataListener {
     private DataFetcher dataFetcher;
     private Context context;
     private Gson gson;
+    private MoodDatabase database;
 
 
     @Override
@@ -50,6 +53,7 @@ public class WeatherFragment extends Fragment implements DataListener {
         super.onCreate(savedInstanceState);
         context = getContext();
         gson = new Gson();
+        database = Room.databaseBuilder(context, MoodDatabase.class, context.getString(R.string.database_name)).build();
     }
 
     @Nullable
@@ -87,7 +91,7 @@ public class WeatherFragment extends Fragment implements DataListener {
     @Override
     public void onForecastFetched(List<AerisPeriod> forecast) {
         weatherList = forecast;
-        onAllDataFetched(createAerisPoetryList());
+        onAllDataFetched();
     }
 
     @Override
@@ -98,10 +102,19 @@ public class WeatherFragment extends Fragment implements DataListener {
     }
 
     @Override
-    public void onAllDataFetched(List<WeatherPoetry> data) {
-        MoodDatabase database = Room.databaseBuilder(context, MoodDatabase.class,context.getString(R.string.database_name)).build();
-        setUpRecyclerView(data);
+    public void onAllDataFetched() {
+        setUpRecyclerView(createAerisPoetryList());
         //TODO run in background with RxJava
-        database.weatherPoetryDao().insertAll(data);
+        final Executor executor = Executors.newFixedThreadPool(2);
+        executor.execute(() -> {
+            database.weatherPoetryDao().insertAll(dataSet);
+
+        });
+
+    }
+
+
+    void saveWeatherDataToRoom(List<WeatherPoetry> dataSet) {
+        database.weatherPoetryDao().insertAll(dataSet);
     }
 }

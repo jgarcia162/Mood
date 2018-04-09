@@ -2,8 +2,10 @@ package com.example.android.mood.network;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.android.mood.model.aeris.AerisConstants;
+import com.example.android.mood.model.aeris.AerisPeriod;
 import com.example.android.mood.model.aeris.AerisResponse;
 import com.example.android.mood.model.poetry.Poem;
 
@@ -14,6 +16,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Joe on 4/3/18.
  */
@@ -22,6 +26,8 @@ import retrofit2.Retrofit;
 
 public class DataFetcher {
     private DataListener dataListener;
+    private List<Poem> poemsList;
+    private List<AerisPeriod> weatherList;
 
     public DataFetcher(DataListener pListener) {
         dataListener = pListener;
@@ -37,8 +43,9 @@ public class DataFetcher {
             @Override
             public void onResponse(@NonNull Call<AerisResponse> call, @Nullable Response<AerisResponse> response) {
                 if (response != null) {
-                    dataListener.onForecastFetched(response.body().getResults().get(0).getPeriods());
-                }else{
+                    weatherList = response.body().getResults().get(0).getPeriods();
+                    dataListener.onForecastFetched(weatherList);
+                } else {
                     //TODO show error dialog
                 }
             }
@@ -50,15 +57,17 @@ public class DataFetcher {
         });
     }
 
-    public void getPoems(){
-        Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
+    public void getPoems() {
+        final Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
         PoetryService poetryService = poemRetrofit.create(PoetryService.class);
         //TODO get user's favorite author from prefs or random if none or not found
         Call<List<Poem>> call = poetryService.getAuthorWorks("Emily Dickinson");
-        call.enqueue(new Callback<List<Poem>>() {
+        Log.e(TAG, ""+call.request());
+        call.enqueue(new Callback<List<Poem>>(){
             @Override
             public void onResponse(@NonNull Call<List<Poem>> call, @NonNull Response<List<Poem>> response) {
-                dataListener.onPoemsFetched(response.body());
+                poemsList = response.body();
+                dataListener.onPoemsFetched(poemsList);
             }
 
             @Override

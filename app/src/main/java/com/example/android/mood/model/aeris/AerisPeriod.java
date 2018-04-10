@@ -2,6 +2,8 @@ package com.example.android.mood.model.aeris;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.joda.time.DateTime;
+
 /**
  * Created by Joe on 4/2/18.
  */
@@ -42,5 +44,9 @@ public class AerisPeriod {
 
     public String getWeatherPrimary() {
         return weatherPrimary;
+    }
+
+    public String getDay() {
+        return new DateTime(this.timestamp).dayOfWeek().getAsText();
     }
 }

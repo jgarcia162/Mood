@@ -107,6 +107,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             linesTV.setText(poemData.getFullPoem());
         }
 
+//
+
 
     }
 }

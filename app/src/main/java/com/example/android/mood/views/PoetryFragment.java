@@ -51,7 +51,6 @@ public class PoetryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //TODO get poems from DB and populate RV
         getPoemsFromDB();
     }
 

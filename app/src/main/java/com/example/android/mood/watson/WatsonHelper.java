@@ -59,12 +59,13 @@ public class WatsonHelper {
         }
     }
 
-    public void getTones(ToneOptions options, WatsonListener listener) {
+    public void getTones(String text, WatsonListener listener) {
+        ToneOptions options = new ToneOptions.Builder().html(text).build();
+
         toneAnalyzer.tone(options).enqueue(new ServiceCallback<ToneAnalysis>() {
             @Override
             public void onResponse(ToneAnalysis response) {
                 DocumentAnalysis documentAnalysis = response.getDocumentTone();
-//                Log.d(TAG, "onResponse: " + documentAnalysis.getTones().get(0).getToneName());
                 listener.onTonesFetched(documentAnalysis.getTones());
             }
 

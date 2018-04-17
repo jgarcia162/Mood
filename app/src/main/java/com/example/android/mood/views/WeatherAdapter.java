@@ -104,7 +104,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             Poem poemData = gson.fromJson(data.getPoem(),Poem.class);
             Log.d(TAG, "bind: timestamp = " + weatherData.getTimestamp() );
 
-            //TODO get day value of timestamp
             dateTV.setText(weatherData.getFullDayOfTheWeekName());
             weatherTV.setText(itemView.getContext().getResources().getString(R.string.weather_title, weatherData.getWeatherPrimary(), weatherData.getMaxTempF(), weatherData.getMinTempF()));
             poemTitleTV.setText(poemData.getTitle());

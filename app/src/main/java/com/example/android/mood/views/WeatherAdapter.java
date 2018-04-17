@@ -3,6 +3,7 @@ package com.example.android.mood.views;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Joe on 4/2/18.
@@ -99,15 +102,17 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         public void bind(WeatherPoetry data) {
             AerisPeriod weatherData = gson.fromJson(data.getWeather(),AerisPeriod.class);
             Poem poemData = gson.fromJson(data.getPoem(),Poem.class);
+            Log.d(TAG, "bind: timestamp = " + weatherData.getTimestamp() );
 
             //TODO get day value of timestamp
-            dateTV.setText(String.valueOf(weatherData.getTimestamp()));
+            dateTV.setText(weatherData.getFullDayOfTheWeekName());
             weatherTV.setText(itemView.getContext().getResources().getString(R.string.weather_title, weatherData.getWeatherPrimary(), weatherData.getMaxTempF(), weatherData.getMinTempF()));
             poemTitleTV.setText(poemData.getTitle());
             linesTV.setText(poemData.getFullPoem());
         }
 
-//
+
+
 
 
     }

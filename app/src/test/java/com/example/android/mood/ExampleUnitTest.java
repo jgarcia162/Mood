@@ -1,9 +1,6 @@
 package com.example.android.mood;
 
 import com.example.android.mood.model.poetry.Poem;
-import com.example.android.mood.model.aeris.AerisConstants;
-import com.example.android.mood.model.aeris.AerisResults;
-import com.example.android.mood.network.AerisService;
 import com.example.android.mood.network.PoetryService;
 import com.example.android.mood.network.RetrofitFactory;
 
@@ -17,8 +14,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static org.junit.Assert.assertNotEquals;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -26,25 +21,25 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class ExampleUnitTest {
 
-    @Test
-    public void weatherTest() {
-        Retrofit retrofit = RetrofitFactory.getAerisInstance();
-        AerisService service = retrofit.create(AerisService.class);
-        Call<AerisResults> call = service.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
-
-        call.enqueue(new Callback<AerisResults>() {
-            @Override
-            public void onResponse(Call<AerisResults> call, Response<AerisResults> response) {
-                assertNotEquals(null, response.body());
-                System.out.println(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<AerisResults> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
+//    @Test
+//    public void weatherTest() {
+//        Retrofit retrofit = RetrofitFactory.getAerisInstance();
+//        AerisService service = retrofit.create(AerisService.class);
+//        Call<AerisResults> call = service.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
+//
+//        call.enqueue(new Callback<AerisResults>() {
+//            @Override
+//            public void onResponse(Call<AerisResults> call, Response<AerisResults> response) {
+//                assertNotEquals(null, response.body());
+//                System.out.println(response.body());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AerisResults> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//    }
 
     @Test
     public void poetryTest(){

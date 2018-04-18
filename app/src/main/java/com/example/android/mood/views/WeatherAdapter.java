@@ -59,10 +59,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
                 if (shouldExpand) {
                     holder.linesTV.setVisibility(View.VISIBLE);
-                    holder.toggleIV.setImageResource(android.R.drawable.arrow_up_float);
                 } else {
                     holder.linesTV.setVisibility(View.GONE);
-                    holder.toggleIV.setImageResource(R.drawable.ellipses);
                 }
 
                 TransitionManager.beginDelayedTransition(recyclerView, transition);

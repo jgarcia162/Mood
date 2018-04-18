@@ -84,6 +84,7 @@ public class WeatherFragment extends Fragment implements DataListener {
     private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(new WeatherAdapter(dataSet, recyclerView));
     }
 

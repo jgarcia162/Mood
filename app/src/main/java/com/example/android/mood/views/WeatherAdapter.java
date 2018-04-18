@@ -1,5 +1,6 @@
 package com.example.android.mood.views;
 
+import android.support.annotation.NonNull;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.example.android.mood.model.WeatherPoetry;
 import com.example.android.mood.model.aeris.AerisPeriod;
 import com.example.android.mood.model.poetry.Poem;
 import com.google.gson.Gson;
+import com.qhutch.elevationimageview.ElevationImageView;
 
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         this.recyclerView = recyclerView;
     }
 
+    @NonNull
     @Override
     public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new WeatherViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_item_view, parent, false));
@@ -92,6 +95,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         public TextView linesTV;
         @BindView(R.id.toggle_iv)
         public ImageView toggleIV;
+        @BindView(R.id.weather_itemview_icon)
+        public ElevationImageView elevationImageView;
 
 
         public WeatherViewHolder(View itemView) {
@@ -109,9 +114,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             poemTitleTV.setText(poemData.getTitle());
             linesTV.setText(poemData.getFullPoem());
         }
-
-
-
 
 
     }

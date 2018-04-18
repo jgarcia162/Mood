@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CardView"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="15dp"
     android:animateLayoutChanges="true"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Monday" />
 
-        <ImageView
+        <com.qhutch.elevationimageview.ElevationImageView
             android:id="@+id/weather_itemview_icon"
             android:layout_width="72dp"
             android:layout_height="72dp"
@@ -39,8 +39,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:elevation="@dimen/cardview_default_elevation"
             android:layout_toStartOf="@+id/weather_date_tv"
-            android:src="@android:drawable/btn_star"
+            android:src="@drawable/sunny"
             app:layout_constraintBottom_toTopOf="@+id/poem_title_tv"
             app:layout_constraintEnd_toStartOf="@+id/poem_title_tv"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,17 +70,21 @@
         <TextView
             android:id="@+id/poem_title_tv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="17dp"
             android:layout_below="@+id/weather_tv"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/colorFontDefault"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="162dp"
+            app:layout_constraintTop_toBottomOf="@+id/weather_date_tv"
+            app:layout_constraintVertical_bias="0.7"
             tools:text="Poem Title" />
 
         <ImageView
@@ -94,6 +99,7 @@
             android:layout_marginTop="8dp"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:elevation="@dimen/cardview_default_elevation"
             android:src="@drawable/ellipses"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -105,10 +105,10 @@ public class WeatherFragment extends Fragment implements DataListener {
     public void onAllDataFetched() {
         setUpRecyclerView(createAerisPoetryList());
         //TODO run in background with RxJava
+
         Executor executor = Executors.newFixedThreadPool(2);
         executor.execute(() -> {
             database.weatherPoetryDao().insertAll(dataSet);
-
         });
 
     }

@@ -7,6 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import rx.Observable;
 
 /**
  * Created by Joe on 4/2/18.
@@ -14,14 +15,25 @@ import retrofit2.http.Path;
 
 public interface PoetryService {
     //Gets all the authors in the API DB
+//    @GET("author")
+//    Call<List<String>> getAuthors();
+
+    /**
+    * Getting the authors using RxJava requires an Observable return type */
     @GET("author")
-    Call<List<String>> getAuthors();
+    Observable<List<String>> getAuthors();
 
     //Gets all the works from that author
+//    @GET("author/{author}")
+//    Call<List<Poem>> getAuthorWorks(@Path("author")String author);
+
     @GET("author/{author}")
-    Call<List<Poem>> getAuthorWorks(@Path("author")String author);
+    Observable<List<Poem>> getAuthorWorks(@Path("author")String author);
 
     //Gets titles of all the works of the author
+//    @GET("author/{author}/title")
+//    Call<List<String>> getTitles(@Path("author") String author);
+
     @GET("author/{author}/title")
-    Call<List<String>> getTitles(@Path("author") String author);
+    Observable<List<String>> getTitles(@Path("author") String author);
 }

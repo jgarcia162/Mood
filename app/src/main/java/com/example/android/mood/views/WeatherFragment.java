@@ -1,11 +1,12 @@
 package com.example.android.mood.views;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.example.android.mood.model.poetry.Poem;
 import com.example.android.mood.network.DataFetcher;
 import com.example.android.mood.network.DataListener;
 import com.example.android.mood.room.MoodDatabase;
+import com.example.android.mood.watson.WatsonHelper;
+import com.example.android.mood.watson.WatsonListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ import butterknife.ButterKnife;
  * Created by Joe on 4/3/18.
  */
 
-public class WeatherFragment extends Fragment implements DataListener {
+public class WeatherFragment extends Fragment implements DataListener, WatsonListener {
     private final String TAG = getClass().getCanonicalName();
     @BindView(R.id.recycler_view)
     public RecyclerView recyclerView;
@@ -42,17 +45,22 @@ public class WeatherFragment extends Fragment implements DataListener {
     private Random randomPoemIndexGenerator = new Random();
     private int randomPoemIndex;
     private DataFetcher dataFetcher;
-    private Context context;
     private Gson gson;
     private MoodDatabase database;
-
+    private Poem randomPoem;
+    private List<WeatherPoetry> weatherPoetryDataSet;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getContext();
         gson = new Gson();
-        database = MoodDatabase.getInstance(context);
+        database = MoodDatabase.getInstance(getContext());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        database = MoodDatabase.getInstance(getContext());
     }
 
     @Nullable
@@ -69,6 +77,71 @@ public class WeatherFragment extends Fragment implements DataListener {
         dataFetcher.getPoems();
     }
 
+    @SuppressLint("CheckResult")
+    @Override
+    public void onPoemsFetched(List<Poem> poems) {
+        poemList = poems;
+        Log.d(TAG, "onPoemsFetched: PoemList size " + poemList.size());
+//        randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size());
+        WatsonHelper.getInstance().configureToneAnalyzer(getContext());
+//        Observable<String[]> poemObservable = Observable.just(WatsonHelper.getInstance().getTone(poemList.get(randomPoemIndex).getFullPoem()));
+//
+//        poemObservable.subscribe(new Observer<String[]>() {
+//                                     @Override
+//                                     public void onSubscribe(Disposable d) {
+//                                     }
+//
+//                                     @Override
+//                                     public void onNext(String[] strings) {
+//                                         poemList.get(randomPoemIndex).setMood(strings[0]);
+//                                         Toast.makeText(getContext(), "OBSERVABLE", Toast.LENGTH_SHORT).show();
+//                                     }
+//
+//                                     @Override
+//                                     public void onError(Throwable e) {
+//
+//                                     }
+//
+//                                     @Override
+//                                     public void onComplete() {
+//
+//                                     }
+//                                 }
+//        );
+        dataFetcher.getForecast();
+    }
+
+    @Override
+    public void onForecastFetched(List<AerisPeriod> forecast) {
+        weatherList = forecast;
+        randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size());
+        Poem randomPoem = poemList.get(randomPoemIndex);
+        WatsonHelper.getInstance().getTone(randomPoem.getFullPoem(), this);
+    }
+
+    @Override
+    public void onTonesFetched(String tone) {
+        Log.d(TAG, "onTonesFetched: onTonesFetched() " + tone);
+        //TODO run in background with RxJava
+        poemList.get(randomPoemIndex).setMood(tone);
+        onAllDataFetched();
+    }
+
+    @Override
+    public void onAllDataFetched() {
+        Log.d(TAG, "onAllDataFetched: onAllDataFetched()");
+        dataSet = createAerisPoetryList();
+        setUpRecyclerView(dataSet);
+
+        Executor executor = Executors.newFixedThreadPool(2);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                database.weatherPoetryDao().insertAll(dataSet);
+            }
+        });
+    }
+
     private List<WeatherPoetry> createAerisPoetryList() {
         //TODO avoid repeated poems
         for (int i = 0; i < weatherList.size(); i++) {
@@ -77,44 +150,50 @@ public class WeatherFragment extends Fragment implements DataListener {
             dataSet.add(new WeatherPoetry(weatherJsonString, poemJsonString));
             randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         }
+
         return dataSet;
     }
 
 
+
+
     private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(new WeatherAdapter(dataSet, recyclerView));
+        weatherPoetryDataSet = dataSet;
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run(){
+                        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                        recyclerView.setLayoutManager(manager);
+                        recyclerView.setHasFixedSize(false);
+                        recyclerView.setAdapter(new WeatherAdapter(weatherPoetryDataSet, recyclerView));
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                });
+            }
+        };
+
+        thread.run();
     }
+
+
+
 
     @Override
-    public void onForecastFetched(List<AerisPeriod> forecast) {
-        weatherList = forecast;
-        onAllDataFetched();
+    public void onDestroy() {
+        super.onDestroy();
+        database.destroyInstance();
     }
 
-    @Override
-    public void onPoemsFetched(List<Poem> poems) {
-        poemList = poems;
-        randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
-        dataFetcher.getForecast();
-    }
 
-    @Override
-    public void onAllDataFetched() {
-        setUpRecyclerView(createAerisPoetryList());
-        //TODO run in background with RxJava
 
-        Executor executor = Executors.newFixedThreadPool(2);
-        executor.execute(() -> {
-            database.weatherPoetryDao().insertAll(dataSet);
-        });
 
-    }
 
 
     void saveWeatherDataToRoom(List<WeatherPoetry> dataSet) {
         database.weatherPoetryDao().insertAll(dataSet);
     }
+
+
 }

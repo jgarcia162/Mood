@@ -8,6 +8,15 @@ public class Poem {
     private String title;
     private String author;
     private String[] lines;
+    private String mood;
+
+    public String getMood() {
+        return mood;
+    }
+
+    public void setMood(String mood) {
+        this.mood = mood;
+    }
 
     public String getTitle() {
         return title;

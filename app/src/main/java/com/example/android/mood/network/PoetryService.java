@@ -4,10 +4,10 @@ import com.example.android.mood.model.poetry.Poem;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * Created by Joe on 4/2/18.
@@ -24,11 +24,11 @@ public interface PoetryService {
     Observable<List<String>> getAuthors();
 
     //Gets all the works from that author
-//    @GET("author/{author}")
-//    Call<List<Poem>> getAuthorWorks(@Path("author")String author);
-
     @GET("author/{author}")
-    Observable<List<Poem>> getAuthorWorks(@Path("author")String author);
+    Call<List<Poem>> getAuthorWorks(@Path("author")String author);
+
+//    @GET("author/{author}")
+//    Observable<List<Poem>> getAuthorWorks(@Path("author")String author);
 
     //Gets titles of all the works of the author
 //    @GET("author/{author}/title")

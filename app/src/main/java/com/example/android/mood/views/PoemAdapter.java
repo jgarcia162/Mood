@@ -10,9 +10,7 @@ import android.widget.TextView;
 import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoetry;
 import com.example.android.mood.model.poetry.Poem;
-import com.example.android.mood.watson.WatsonListener;
 import com.google.gson.Gson;
-import com.ibm.watson.developer_cloud.tone_analyzer.v3.model.ToneScore;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by Joe on 4/8/18.
  */
 
-public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder> implements WatsonListener {
+public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder> {
     private List<WeatherPoetry> data;
 
     public PoemAdapter(List<WeatherPoetry> dataSet) {
@@ -47,10 +45,6 @@ public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder
         return data.size();
     }
 
-    @Override
-    public void onTonesFetched(List<ToneScore> tonesScoreList) {
-
-    }
 
     public class PoemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.poem_title)
@@ -64,11 +58,11 @@ public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder
 
         public PoemViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        public void bind(WeatherPoetry data){
-            Poem poem = new Gson().fromJson(data.getPoem(),Poem.class);
+        public void bind(WeatherPoetry data) {
+            Poem poem = new Gson().fromJson(data.getPoem(), Poem.class);
             title.setText(poem.getTitle());
             author.setText(poem.getAuthor());
             poemText.setText(poem.getFullPoem());

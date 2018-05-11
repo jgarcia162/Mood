@@ -59,14 +59,15 @@ public class WatsonHelper {
         }
     }
 
-    public void getTones(String text, WatsonListener listener) {
+    public void getTone(String text, final WatsonListener listener) {
+        Log.d(TAG, "getTone: ");
         ToneOptions options = new ToneOptions.Builder().html(text).build();
 
         toneAnalyzer.tone(options).enqueue(new ServiceCallback<ToneAnalysis>() {
             @Override
             public void onResponse(ToneAnalysis response) {
                 DocumentAnalysis documentAnalysis = response.getDocumentTone();
-                listener.onTonesFetched(documentAnalysis.getTones());
+                listener.onTonesFetched(documentAnalysis.getTones().get(0).getToneName());
             }
 
             @Override
@@ -76,4 +77,52 @@ public class WatsonHelper {
         });
     }
 
+    /**
+     * Observable<String[]> poemObservable = Observable.just(WatsonHelper.getInstance().getTone(poemList.get(randomPoemIndex).getFullPoem()));
+
+     poemObservable.subscribe(new Observer<String[]>() {
+    @Override
+    public void onSubscribe(Disposable d) {
+    }
+
+    @Override
+    public void onNext(String[] strings) {
+    poemList.get(randomPoemIndex).setMood(strings[0]);
+    Toast.makeText(context, "OBSERVABLE", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+    }
+     );*/
+
+    public String getTone(String text) {
+        ToneOptions options = new ToneOptions.Builder().html(text).build();
+
+       final String[] tone = new String[1];
+
+        toneAnalyzer.tone(options).enqueue(new ServiceCallback<ToneAnalysis>() {
+            @Override
+            public void onResponse(ToneAnalysis response) {
+                DocumentAnalysis documentAnalysis = response.getDocumentTone();
+                tone[0] = documentAnalysis.getTones().get(0).getToneName();
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return tone[0];
+    }
 }

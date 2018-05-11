@@ -15,7 +15,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import rx.Observable;
 
 import static android.content.ContentValues.TAG;
 
@@ -45,6 +44,7 @@ public class DataFetcher {
             public void onResponse(@NonNull Call<AerisResponse> call, @Nullable Response<AerisResponse> response) {
                 if (response != null) {
                     weatherList = response.body().getResults().get(0).getPeriods();
+                    Log.d(TAG, "onResponse: getForecast()" );
                     dataListener.onForecastFetched(weatherList);
                 } else {
                     //TODO show error dialog
@@ -58,31 +58,29 @@ public class DataFetcher {
         });
     }
 
-//    public void getPoems() {
-//        Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
-//        PoetryService poetryService = poemRetrofit.create(PoetryService.class);
-//        //TODO get user's favorite author from prefs or random if none or not found
-//        Call<List<Poem>> call = poetryService.getAuthorWorks("Emily Dickinson");
-//        Log.e(TAG, ""+call.request());
-//        call.enqueue(new Callback<List<Poem>>(){
-//            @Override
-//            public void onResponse(@NonNull Call<List<Poem>> call, @NonNull Response<List<Poem>> response) {
-//                poemsList = response.body();
-//                dataListener.onPoemsFetched(poemsList);
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<List<Poem>> call, @NonNull Throwable t) {
-//                t.printStackTrace();
-//            }
-//        });
-//    }
-
-    public Observable<List<Poem>>getPoems() {
+    public void getPoems() {
         Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
         PoetryService poetryService = poemRetrofit.create(PoetryService.class);
         //TODO get user's favorite author from prefs or random if none or not found
-        Observable<List<Poem>> poemObservable = poetryService.getAuthorWorks("Emily Dickinson");
-        return poemObservable;
+        Call<List<Poem>> call = poetryService.getAuthorWorks("Emily Dickinson");
+        call.enqueue(new Callback<List<Poem>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Poem>> call, @NonNull Response<List<Poem>> response) {
+                poemsList = response.body();
+                dataListener.onPoemsFetched(poemsList);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Poem>> call, @NonNull Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
+
+//    public Observable<List<Poem>> getPoems() {
+//        Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
+//        PoetryService poetryService = poemRetrofit.create(PoetryService.class);
+//        //TODO get user's favorite author from prefs or random if none or not found
+//        return poetryService.getAuthorWorks("Emily Dickinson");
+//    }
 }

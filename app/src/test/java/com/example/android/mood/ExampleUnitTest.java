@@ -23,9 +23,9 @@ public class ExampleUnitTest {
 
 //    @Test
 //    public void weatherTest() {
-//        Retrofit retrofit = RetrofitFactory.getAerisInstance();
+//        Retrofit retrofit = RetrofitFactory.getAerisRetrofitInstance();
 //        AerisService service = retrofit.create(AerisService.class);
-//        Call<AerisResults> call = service.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
+//        Call<AerisResults> call = service.getAerisResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
 //
 //        call.enqueue(new Callback<AerisResults>() {
 //            @Override
@@ -43,7 +43,7 @@ public class ExampleUnitTest {
 
     @Test
     public void poetryTest(){
-        Retrofit retrofit = RetrofitFactory.getPoetryInstance();
+        Retrofit retrofit = RetrofitFactory.getPoetryRetrofitInstance();
         PoetryService service = retrofit.create(PoetryService.class);
         Call<List<Poem>> call = service.getAuthorWorks("Emily Dickinson");
         call.enqueue(new Callback<List<Poem>>() {

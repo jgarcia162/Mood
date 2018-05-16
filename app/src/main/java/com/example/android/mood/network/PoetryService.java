@@ -23,7 +23,6 @@ public interface PoetryService {
     @GET("author")
     Observable<List<String>> getAuthors();
 
-    //Gets all the works from that author
     @GET("author/{author}")
     Call<List<Poem>> getAuthorWorks(@Path("author")String author);
 

@@ -13,5 +13,5 @@ import retrofit2.http.Query;
 
 public interface AerisService {
     @GET("forecasts/{city}")
-    Call<AerisResponse> getResponse(@Path("city") String city, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
+    Call<AerisResponse> getAerisResponse(@Path("city") String city, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
 }

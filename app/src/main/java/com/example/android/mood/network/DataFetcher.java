@@ -33,12 +33,20 @@ public class DataFetcher {
         dataListener = pListener;
     }
 
+    public RxAerisService getRxAerisService(){
+        return RetrofitFactory.getAerisRetrofitInstance().create(RxAerisService.class);
+    }
+
+    public RxPoetryService getRxPoetryService(){
+        return RetrofitFactory.getPoetryRetrofitInstance().create(RxPoetryService.class);
+    }
+
     public void getForecast() {
-        Retrofit weatherRetrofit = RetrofitFactory.getAerisInstance();
+        Retrofit weatherRetrofit = RetrofitFactory.getAerisRetrofitInstance();
         AerisService aerisService = weatherRetrofit.create(AerisService.class);
         //TODO get user location
         //shared pref or pref fragment for user location option, toggle on or off
-        Call<AerisResponse> aerisResponseCall = aerisService.getResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
+        Call<AerisResponse> aerisResponseCall = aerisService.getAerisResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
         aerisResponseCall.enqueue(new Callback<AerisResponse>() {
             @Override
             public void onResponse(@NonNull Call<AerisResponse> call, @Nullable Response<AerisResponse> response) {
@@ -59,7 +67,7 @@ public class DataFetcher {
     }
 
     public void getPoems() {
-        Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
+        Retrofit poemRetrofit = RetrofitFactory.getPoetryRetrofitInstance();
         PoetryService poetryService = poemRetrofit.create(PoetryService.class);
         //TODO get user's favorite author from prefs or random if none or not found
         Call<List<Poem>> call = poetryService.getAuthorWorks("Emily Dickinson");
@@ -78,7 +86,7 @@ public class DataFetcher {
     }
 
 //    public Observable<List<Poem>> getPoems() {
-//        Retrofit poemRetrofit = RetrofitFactory.getPoetryInstance();
+//        Retrofit poemRetrofit = RetrofitFactory.getPoetryRetrofitInstance();
 //        PoetryService poetryService = poemRetrofit.create(PoetryService.class);
 //        //TODO get user's favorite author from prefs or random if none or not found
 //        return poetryService.getAuthorWorks("Emily Dickinson");

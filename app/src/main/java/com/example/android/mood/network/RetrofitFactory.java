@@ -15,18 +15,43 @@ public class RetrofitFactory {
     public static Retrofit aerisInstance;
     public static Retrofit poetryInstance;
 
-    public static Retrofit getAerisInstance() {
+    public static Retrofit getAerisRetrofitInstance() {
         if (aerisInstance == null) {
-            aerisInstance = new Retrofit.Builder().baseUrl(AerisConstants.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).addConverterFactory(GsonConverterFactory.create()).build();
+
+            aerisInstance = new Retrofit.Builder()
+                    .baseUrl(AerisConstants.BASE_URL)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory
+                            .create())
+                    .addConverterFactory(GsonConverterFactory
+                            .create())
+                    .build();
+
         }
+
         return aerisInstance;
     }
 
-    public static Retrofit getPoetryInstance() {
+    public <S> S getAerisService(Class<S> serviceClass){
+        return getAerisRetrofitInstance().create(serviceClass);
+    }
+
+    public static Retrofit getPoetryRetrofitInstance() {
         if (poetryInstance == null) {
-            poetryInstance = new Retrofit.Builder().baseUrl(PoetryConstants.BASE_URL).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).addConverterFactory(GsonConverterFactory.create()).build();
+
+            poetryInstance = new Retrofit.Builder()
+                    .baseUrl(PoetryConstants.BASE_URL)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory
+                            .create())
+                    .addConverterFactory(GsonConverterFactory
+                            .create())
+                    .build();
         }
+
         return poetryInstance;
+    }
+
+    public <S> S getPoetryService(Class<S> serviceClass){
+        return getAerisRetrofitInstance().create(serviceClass);
     }
 
 }

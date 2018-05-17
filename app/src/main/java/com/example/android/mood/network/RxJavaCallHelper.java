@@ -7,6 +7,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class RxJavaCallHelper {
+
     public static <T> Disposable call(Observable<T> observable, final RxJava2ApiCallback<T> rxJavaCallback) {
         if (observable == null) {
             throw new IllegalArgumentException("Observable must not be null.");
@@ -15,13 +16,14 @@ public class RxJavaCallHelper {
         if (rxJavaCallback == null) {
             throw new IllegalArgumentException("Callback must not be null.");
         }
+
         return observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<T>() {
                     @Override
                     public void accept(T t) throws Exception {
-
+                        rxJavaCallback.onSuccess(t);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -90,6 +90,7 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
     }
 
     private void createWeatherDisposable(Observable<AerisResponse> observable) {
+
         Disposable disposable = RxJavaCallHelper.call(observable, new RxJava2ApiCallback<AerisResponse>() {
             @Override
             public void onSuccess(AerisResponse aerisResponse) {
@@ -99,6 +100,20 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
             @Override
             public void onFailed(Throwable throwable) {
                 Log.d(TAG, "onFailed() called with: throwable = [" + throwable + "]");
+            }
+        });
+    }
+
+    private void createPoemDisposable(Observable<List<Poem>> observable){
+        Disposable disposable = RxJavaCallHelper.call(observable, new RxJava2ApiCallback<List<Poem>>() {
+            @Override
+            public void onSuccess(List<Poem> poems) {
+
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+
             }
         });
     }

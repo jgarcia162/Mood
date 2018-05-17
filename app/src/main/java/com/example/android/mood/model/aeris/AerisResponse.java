@@ -20,4 +20,8 @@ public class AerisResponse {
     public List<AerisResults> getResults() {
         return results;
     }
+
+    public List<AerisPeriod> getPeriods(){
+        return results.get(0).getPeriods();
+    }
 }

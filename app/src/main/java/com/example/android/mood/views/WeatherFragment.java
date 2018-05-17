@@ -1,6 +1,5 @@
 package com.example.android.mood.views;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,7 @@ import com.example.android.mood.model.aeris.AerisConstants;
 import com.example.android.mood.model.aeris.AerisPeriod;
 import com.example.android.mood.model.aeris.AerisResponse;
 import com.example.android.mood.model.poetry.Poem;
-import com.example.android.mood.network.DataFetcher;
-import com.example.android.mood.network.DataListener;
+import com.example.android.mood.network.MoodApiHelper;
 import com.example.android.mood.network.RxJava2ApiCallback;
 import com.example.android.mood.network.RxJavaCallHelper;
 import com.example.android.mood.room.MoodDatabase;
@@ -41,7 +39,7 @@ import io.reactivex.disposables.Disposable;
  * Created by Joe on 4/3/18.
  */
 
-public class WeatherFragment extends Fragment implements DataListener, WatsonListener {
+public class WeatherFragment extends Fragment implements WatsonListener {
     private final String TAG = getClass().getCanonicalName();
 
     @BindView(R.id.recycler_view)
@@ -51,7 +49,7 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
     private List<WeatherPoetry> dataSet = new ArrayList<>();
     private Random randomPoemIndexGenerator = new Random();
     private int randomPoemIndex;
-    private DataFetcher dataFetcher;
+    private MoodApiHelper moodApiHelper;
     private Gson gson;
     private MoodDatabase database;
     private Poem randomPoem;
@@ -80,7 +78,7 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        dataFetcher = new DataFetcher(this);
+        moodApiHelper = new MoodApiHelper();
 
         Observable<AerisResponse> weatherObservable = getAerisObservable();
 
@@ -94,7 +92,7 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
         Disposable disposable = RxJavaCallHelper.call(observable, new RxJava2ApiCallback<AerisResponse>() {
             @Override
             public void onSuccess(AerisResponse aerisResponse) {
-
+                onForecastFetched(aerisResponse.getPeriods());
             }
 
             @Override
@@ -105,10 +103,11 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
     }
 
     private void createPoemDisposable(Observable<List<Poem>> observable){
+
         Disposable disposable = RxJavaCallHelper.call(observable, new RxJava2ApiCallback<List<Poem>>() {
             @Override
             public void onSuccess(List<Poem> poems) {
-
+                onPoemsFetched(poems);
             }
 
             @Override
@@ -121,52 +120,23 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
 
     private Observable<List<Poem>> getPoemsObservable() {
 
-        return dataFetcher
+        return moodApiHelper
                 .getRxPoetryService()
                 .getAuthorWorks("Emily Dickinson");
     }
 
     private Observable<AerisResponse> getAerisObservable() {
 
-        return dataFetcher
+        return moodApiHelper
                 .getRxAerisService()
                 .getAerisResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
     }
 
-    @SuppressLint("CheckResult")
-    @Override
     public void onPoemsFetched(List<Poem> poems) {
         poemList = poems;
-//        randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size());
         WatsonHelper.getInstance().configureToneAnalyzer(getContext());
-//        Observable<String[]> poemObservable = Observable.just(WatsonHelper.getInstance().getTone(poemList.get(randomPoemIndex).getFullPoem()));
-//
-//        poemObservable.subscribe(new Observer<String[]>() {
-//                                     @Override
-//                                     public void onSubscribe(Disposable d) {
-//                                     }
-//
-//                                     @Override
-//                                     public void onNext(String[] strings) {
-//                                         poemList.get(randomPoemIndex).setMood(strings[0]);
-//                                         Toast.makeText(getContext(), "OBSERVABLE", Toast.LENGTH_SHORT).show();
-//                                     }
-//
-//                                     @Override
-//                                     public void onError(Throwable e) {
-//
-//                                     }
-//
-//                                     @Override
-//                                     public void onComplete() {
-//
-//                                     }
-//                                 }
-//        );
-        dataFetcher.getForecast();
     }
 
-    @Override
     public void onForecastFetched(List<AerisPeriod> forecast) {
         weatherList = forecast;
         randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size());
@@ -176,15 +146,12 @@ public class WeatherFragment extends Fragment implements DataListener, WatsonLis
 
     @Override
     public void onTonesFetched(String tone) {
-        Log.d(TAG, "onTonesFetched: onTonesFetched() " + tone);
         //TODO run in background with RxJava
         poemList.get(randomPoemIndex).setMood(tone);
         onAllDataFetched();
     }
 
-    @Override
     public void onAllDataFetched() {
-        Log.d(TAG, "onAllDataFetched: onAllDataFetched()");
         dataSet = createAerisPoetryList();
         setUpRecyclerView(dataSet);
 

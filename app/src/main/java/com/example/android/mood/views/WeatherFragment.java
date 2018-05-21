@@ -7,10 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoetry;
@@ -89,12 +89,12 @@ public class WeatherFragment extends Fragment implements WatsonListener {
         moodApiHelper = new MoodApiHelper();
         compositeDisposable = new CompositeDisposable();
 
-
         Observable<AerisResponse> weatherObservable = getAerisObservable();
         Observable<List<Poem>> poemsObservable = getPoemsObservable();
         Observable<Object> allDataObservable = Observable.concat(weatherObservable, poemsObservable);
 
         subscribeDataObserver(allDataObservable);
+
     }
 
     @SuppressLint("CheckResult")
@@ -124,7 +124,6 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete: ");
                         dataSet = createAerisPoetryList();
                         setUpRecyclerView(dataSet);
                     }
@@ -136,7 +135,7 @@ public class WeatherFragment extends Fragment implements WatsonListener {
         //TODO change hardcoded author name
         return moodApiHelper
                 .getRxPoetryService()
-                .getAuthorWorks("Emily Dickinson");
+                .getAuthorWorks("William Shakespeare");
     }
 
 
@@ -155,6 +154,14 @@ public class WeatherFragment extends Fragment implements WatsonListener {
             dataSet.add(new WeatherPoetry(weatherJsonString, poemJsonString));
             randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         }
+
+        Executor executor = Executors.newFixedThreadPool(2);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                database.weatherPoetryDao().insertAll(dataSet);
+            }
+        });
 
         return dataSet;
     }
@@ -193,7 +200,7 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
 
     private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
-        Log.d(TAG, "setUpRecyclerView: ");
+        Toast.makeText(getContext(), "DATA: " + dataSet.size(), Toast.LENGTH_SHORT).show();
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(false);

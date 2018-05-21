@@ -17,6 +17,7 @@ public class RxJavaCallHelper {
             throw new IllegalArgumentException("Callback must not be null.");
         }
 
+
         return observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

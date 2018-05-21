@@ -10,7 +10,7 @@ import com.example.android.mood.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private static final int NUM_PAGES = 2;
     @BindView(R.id.view_pager)
     public ViewPager viewPager;

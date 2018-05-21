@@ -7,7 +7,8 @@ package com.example.android.mood.model.aeris;
 public class AerisConstants {
 
     public static String ACCESS_ID = "CSmwtNoZifPD0iecEwoZ6";
-    public static String SECRET_KEY = "AlQOZ8gTOmLMBsoCpKLg0kCHoJ6Ss4G5a0dZNEey";
+    public static String SECRET_KEY = "MsWdAQZ5Zsa8OcCOpHAp5tAMzIEFFxplrNyqUhZl";
     public static String BASE_URL= "https://api.aerisapi.com/";
+
 
 }

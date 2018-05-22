@@ -5,5 +5,5 @@ package com.example.android.mood.model.poetry;
  */
 
 public class PoetryConstants {
-    public static String BASE_URL = "http://poetrydb.org/";
+    public static final String BASE_URL = "http://poetrydb.org/";
 }

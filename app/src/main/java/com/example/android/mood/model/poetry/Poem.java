@@ -1,5 +1,7 @@
 package com.example.android.mood.model.poetry;
 
+import java.util.Objects;
+
 /**
  * Created by Joe on 4/2/18.
  */
@@ -36,5 +38,24 @@ public class Poem {
             sb.append(line).append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, author);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Poem poem = (Poem) o;
+
+        return Objects.equals(title, poem.getTitle())
+                && Objects.equals(author, poem.getAuthor());
     }
 }

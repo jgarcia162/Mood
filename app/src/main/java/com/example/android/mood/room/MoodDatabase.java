@@ -20,8 +20,9 @@ public abstract class MoodDatabase extends RoomDatabase {
 
     public static MoodDatabase getInstance(Context context) {
         if (database == null) {
-            database = Room.databaseBuilder(context.getApplicationContext(),
-                    MoodDatabase.class, context.getString(R.string.database_name)).build();
+            database = Room
+                    .databaseBuilder(context.getApplicationContext(), MoodDatabase.class, context.getString(R.string.database_name))
+                    .build();
         }
         return database;
     }

@@ -10,9 +10,12 @@ import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "weatherpoetry")
 public class WeatherPoetry {
+    @PrimaryKey(autoGenerate = true)
+    private int tid;
 
     @ColumnInfo(name = "weather")
     private String weather;
+
     @ColumnInfo(name = "poem")
     private String poem;
 
@@ -25,9 +28,6 @@ public class WeatherPoetry {
         return tid;
     }
 
-    @PrimaryKey(autoGenerate = true)
-    private int tid;
-
     public String getWeather() {
         return weather;
     }
@@ -39,4 +39,7 @@ public class WeatherPoetry {
     public void setTid(int tid) {
         this.tid = tid;
     }
+
+
+
 }

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
                     @Override
                     public void onNext(Object o) {
-
+                        //TODO change WeatherPoetry object in RxJava callback
                         if (o instanceof AerisResponse) {
                             weatherList = ((AerisResponse) o).getPeriods();
 
@@ -146,6 +147,7 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
     private List<WeatherPoetry> createAerisPoetryList() {
         //TODO avoid repeated poems
+
         for (int i = 0; i < weatherList.size(); i++) {
             String weatherJsonString = gson.toJson(weatherList.get(i));
             String poemJsonString = gson.toJson(poemList.get(randomPoemIndex));
@@ -153,9 +155,13 @@ public class WeatherFragment extends Fragment implements WatsonListener {
             randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
         }
 
-//        saveWeatherDataToRoom(dataSet);
+        saveWeatherDataToRoom(dataSet);
 
         return dataSet;
+    }
+
+    private void saveWeatherDataToRoom(List<WeatherPoetry> dataSet) {
+
     }
 
     public void onPoemsFetched(List<Poem> poems) {
@@ -179,6 +185,7 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
 
     private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
+        Log.d(TAG, "setUpRecyclerView: DATA SET" + dataSet.size());
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(false);

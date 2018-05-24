@@ -56,6 +56,7 @@ public class PoetryFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     private void getPoemsFromDB() {
+
         new AsyncTask<Void,Void,List<WeatherPoetry>>(){
             @Override
             protected List<WeatherPoetry> doInBackground(Void... voids) {
@@ -67,6 +68,7 @@ public class PoetryFragment extends Fragment {
                 setUpRecyclerView(weatherPoetryList);
             }
         }.execute();
+
     }
 
     private void setUpRecyclerView(List<WeatherPoetry> dataSet) {

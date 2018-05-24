@@ -31,6 +31,15 @@ public abstract class WeatherPoetryDao {
     @Query("DELETE FROM weatherpoetry")
     public abstract void deleteAll();
 
+    @Query("SELECT * FROM weatherpoetry WHERE poem_title LIKE :poemTitle AND author LIKE :author LIMIT 1")
+    public abstract WeatherPoetry findByTitleAndAuthor(String poemTitle, String author);
+
+    @Query("SELECT * FROM weatherpoetry WHERE author LIKE :author")
+    public abstract List<WeatherPoetry> findByAuthor(String author);
+
+    @Query("SELECT * FROM weatherpoetry WHERE poem_title LIKE :title")
+    public abstract List<WeatherPoetry> findByTitle(String title);
+
     @Transaction
     public void updateData(List<WeatherPoetry> data){
         insertAll(data);

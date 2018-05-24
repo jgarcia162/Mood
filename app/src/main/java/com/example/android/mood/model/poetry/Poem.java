@@ -7,9 +7,9 @@ import java.util.Objects;
  */
 
 public class Poem {
-    private String title;
-    private String author;
-    private String[] lines;
+    public String title;
+    public String author;
+    public String[] lines;
     private String mood;
 
     public String getMood() {

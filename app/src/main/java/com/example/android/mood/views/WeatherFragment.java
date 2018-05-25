@@ -25,6 +25,7 @@ import com.example.android.mood.watson.WatsonListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -147,12 +148,17 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
     private List<WeatherPoetry> createAerisPoetryList() {
         //TODO avoid repeated poems
-
+        HashSet<Integer> randomIntSet = new HashSet<>();
+        randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size());
+        randomIntSet.add(randomPoemIndex);
         for (int i = 0; i < weatherList.size(); i++) {
-            String weatherJsonString = gson.toJson(weatherList.get(i));
-            String poemJsonString = gson.toJson(poemList.get(randomPoemIndex));
-            dataSet.add(new WeatherPoetry(weatherJsonString, poemJsonString));
-            randomPoemIndex = randomPoemIndexGenerator.nextInt(poemList.size()) + 1;
+            String weather = weatherList.get(i).getWeatherPrimary();
+            String poem = poemList.get(randomPoemIndex).getFullPoem();
+            dataSet.add(new WeatherPoetry(weather, poem));
+            randomIntSet.add(randomPoemIndex);
+            do {
+                randomPoemIndex = randomPoemIndexGenerator.nextInt();
+            }while(randomIntSet.contains(randomPoemIndex));
         }
 
         saveWeatherDataToRoom(dataSet);
@@ -161,7 +167,12 @@ public class WeatherFragment extends Fragment implements WatsonListener {
     }
 
     private void saveWeatherDataToRoom(List<WeatherPoetry> dataSet) {
+        //only need to save the poems and weather and title/author
+        WeatherPoetry data = dataSet.get(0);
 
+        if(database.weatherPoetryDao().findByTitleAndAuthor(data.getPoemTitle(),data.getAuthor()) == null){
+            database.weatherPoetryDao().insert(data);
+        }
     }
 
     public void onPoemsFetched(List<Poem> poems) {

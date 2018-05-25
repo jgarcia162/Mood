@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.mood.R;
-import com.example.android.mood.model.WeatherPoetry;
+import com.example.android.mood.model.WeatherPoem;
 import com.example.android.mood.room.MoodDatabase;
 
 import java.util.List;
@@ -26,12 +26,12 @@ import butterknife.ButterKnife;
  * Created by Joe on 4/3/18.
  */
 
-public class PoetryFragment extends Fragment {
+public class PoemFragment extends Fragment {
     @BindView(R.id.poems_rv)
     public RecyclerView poemsRecyclerView;
     private MoodDatabase database;
     private Context context;
-    private List<WeatherPoetry> poemsList;
+    private List<WeatherPoem> poemsList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,21 +57,21 @@ public class PoetryFragment extends Fragment {
     @SuppressLint("StaticFieldLeak")
     private void getPoemsFromDB() {
 
-        new AsyncTask<Void,Void,List<WeatherPoetry>>(){
+        new AsyncTask<Void,Void,List<WeatherPoem>>(){
             @Override
-            protected List<WeatherPoetry> doInBackground(Void... voids) {
+            protected List<WeatherPoem> doInBackground(Void... voids) {
                 return database.weatherPoetryDao().getAll();
             }
 
             @Override
-            protected void onPostExecute(List<WeatherPoetry> weatherPoetryList) {
-                setUpRecyclerView(weatherPoetryList);
+            protected void onPostExecute(List<WeatherPoem> weatherPoemList) {
+                setUpRecyclerView(weatherPoemList);
             }
         }.execute();
 
     }
 
-    private void setUpRecyclerView(List<WeatherPoetry> dataSet) {
+    private void setUpRecyclerView(List<WeatherPoem> dataSet) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         poemsRecyclerView.setLayoutManager(manager);
         poemsRecyclerView.setAdapter(new PoemAdapter(dataSet));

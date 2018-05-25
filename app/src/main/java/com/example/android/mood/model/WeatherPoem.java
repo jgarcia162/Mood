@@ -4,18 +4,25 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.example.android.mood.model.poems.Poem;
+import com.example.android.mood.model.weather.Weather;
+
 /**
  * Created by Joe on 4/2/18.
  */
 
 @Entity(tableName = "weatherpoetry")
-public class WeatherPoetry {
+public class WeatherPoem {
 
     @PrimaryKey(autoGenerate = true)
     private int tid;
 
     @ColumnInfo(name = "weather")
     private String weather;
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
 
     @ColumnInfo(name = "poem")
     private String poem;
@@ -29,9 +36,17 @@ public class WeatherPoetry {
     @ColumnInfo(name = "mood")
     private String mood;
 
-    public WeatherPoetry(String weather, String poem) {
-        this.weather = weather;
-        this.poem = poem;
+
+    public WeatherPoem(){
+
+    }
+
+    public WeatherPoem(Weather weatherObject, Poem poemObject) {
+        this.weather = weatherObject.getWeatherPrimary();
+        this.poem = poemObject.getFullPoem();
+        this.poemTitle = poemObject.getTitle();
+        this.author = poemObject.getAuthor();
+        this.mood = poemObject.getMood();
     }
 
     public String getMood() {
@@ -58,7 +73,6 @@ public class WeatherPoetry {
         this.author = author;
     }
 
-
     public int getTid() {
         return tid;
     }
@@ -69,6 +83,10 @@ public class WeatherPoetry {
 
     public String getPoem() {
         return poem;
+    }
+
+    public void setPoem(String poem) {
+        this.poem = poem;
     }
 
     public void setTid(int tid) {

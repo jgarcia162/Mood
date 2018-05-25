@@ -1,4 +1,4 @@
-package com.example.android.mood.model.poetry;
+package com.example.android.mood.model.poems;
 
 import java.util.Objects;
 

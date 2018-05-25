@@ -1,6 +1,6 @@
 package com.example.android.mood.network;
 
-import com.example.android.mood.model.poetry.Poem;
+import com.example.android.mood.model.poems.Poem;
 
 import java.util.List;
 

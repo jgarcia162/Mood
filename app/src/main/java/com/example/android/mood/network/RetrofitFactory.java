@@ -1,7 +1,7 @@
 package com.example.android.mood.network;
 
-import com.example.android.mood.model.aeris.AerisConstants;
-import com.example.android.mood.model.poetry.PoetryConstants;
+import com.example.android.mood.model.weather.WeatherConstants;
+import com.example.android.mood.model.poems.PoemConstants;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import okhttp3.OkHttpClient;
@@ -21,7 +21,7 @@ public class RetrofitFactory {
         if (aerisInstance == null) {
 
             aerisInstance = new Retrofit.Builder()
-                    .baseUrl(AerisConstants.BASE_URL)
+                    .baseUrl(WeatherConstants.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory
                             .create())
                     .addConverterFactory(GsonConverterFactory
@@ -42,7 +42,7 @@ public class RetrofitFactory {
 
             Retrofit.Builder builder = new Retrofit.Builder();
 
-            poetryInstance = builder.baseUrl(PoetryConstants.BASE_URL)
+            poetryInstance = builder.baseUrl(PoemConstants.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory
                             .create())
                     .addConverterFactory(GsonConverterFactory

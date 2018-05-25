@@ -1,6 +1,6 @@
 package com.example.android.mood.network;
 
-import com.example.android.mood.model.aeris.AerisResponse;
+import com.example.android.mood.model.weather.WeatherResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,5 +13,5 @@ import retrofit2.http.Query;
 
 public interface AerisService {
     @GET("forecasts/{city}")
-    Call<AerisResponse> getAerisResponse(@Path("city") String city, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
+    Call<WeatherResponse> getAerisResponse(@Path("city") String city, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
 }

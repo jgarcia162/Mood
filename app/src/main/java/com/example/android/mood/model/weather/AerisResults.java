@@ -1,4 +1,4 @@
-package com.example.android.mood.model.aeris;
+package com.example.android.mood.model.weather;
 
 import java.util.List;
 
@@ -8,13 +8,13 @@ import java.util.List;
 
 public class AerisResults {
     private AerisLocation loc;
-    private List<AerisPeriod> periods;
+    private List<Weather> periods;
 
     public AerisLocation getLoc() {
         return loc;
     }
 
-    public List<AerisPeriod> getPeriods() {
+    public List<Weather> getPeriods() {
         return periods;
     }
 }

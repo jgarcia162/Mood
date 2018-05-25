@@ -1,6 +1,6 @@
 package com.example.android.mood;
 
-import com.example.android.mood.model.poetry.Poem;
+import com.example.android.mood.model.poems.Poem;
 import com.example.android.mood.network.PoetryService;
 import com.example.android.mood.network.RetrofitFactory;
 
@@ -25,7 +25,7 @@ public class ExampleUnitTest {
 //    public void weatherTest() {
 //        Retrofit retrofit = RetrofitFactory.getAerisRetrofitInstance();
 //        AerisService service = retrofit.create(AerisService.class);
-//        Call<AerisResults> call = service.getAerisResponse("New York,NY", AerisConstants.ACCESS_ID, AerisConstants.SECRET_KEY);
+//        Call<AerisResults> call = service.getWeekForecast("New York,NY", WeatherConstants.ACCESS_ID, WeatherConstants.SECRET_KEY);
 //
 //        call.enqueue(new Callback<AerisResults>() {
 //            @Override

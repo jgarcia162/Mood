@@ -1,4 +1,4 @@
-package com.example.android.mood.model.aeris;
+package com.example.android.mood.model.weather;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +13,7 @@ import java.util.Locale;
  * Created by Joe on 4/2/18.
  */
 
-public class AerisPeriod {
+public class Weather {
     private long timestamp;
     private int maxTempC;
     private int maxTempF;

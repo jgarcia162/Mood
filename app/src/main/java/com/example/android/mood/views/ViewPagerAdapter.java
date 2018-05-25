@@ -27,7 +27,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new WeatherFragment();
             case 1:
-                return new PoetryFragment();
+                return new PoemFragment();
             default:
                 return new EmptyFragment();
         }

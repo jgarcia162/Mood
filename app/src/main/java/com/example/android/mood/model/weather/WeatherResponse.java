@@ -1,4 +1,4 @@
-package com.example.android.mood.model.aeris;
+package com.example.android.mood.model.weather;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Joe on 4/2/18.
  */
 
-public class AerisResponse {
+public class WeatherResponse {
     private boolean success;
     @SerializedName("response")
     private List<AerisResults> results;
@@ -21,7 +21,7 @@ public class AerisResponse {
         return results;
     }
 
-    public List<AerisPeriod> getPeriods(){
+    public List<Weather> getPeriods(){
         return results.get(0).getPeriods();
     }
 }

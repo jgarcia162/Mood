@@ -1,4 +1,4 @@
-package com.example.android.mood.model.aeris;
+package com.example.android.mood.model.weather;
 
 import com.google.gson.annotations.SerializedName;
 

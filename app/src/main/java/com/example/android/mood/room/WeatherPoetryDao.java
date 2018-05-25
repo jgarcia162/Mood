@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
-import com.example.android.mood.model.WeatherPoetry;
+import com.example.android.mood.model.WeatherPoem;
 
 import java.util.List;
 
@@ -16,32 +16,32 @@ import java.util.List;
 
 @Dao
 public abstract class WeatherPoetryDao {
-    @Query("SELECT * FROM weatherpoetry")
-    public abstract List<WeatherPoetry> getAll();
+    @Query("SELECT * FROM weatherpoetry ")
+    public abstract List<WeatherPoem> getAll();
 
     @Insert
-    public abstract void insert(WeatherPoetry... weatherPoetry);
+    public abstract void insert(WeatherPoem... weatherPoem);
 
     @Insert
-    public abstract void insertAll(List<WeatherPoetry> weatherPoetryList);
+    public abstract void insertAll(List<WeatherPoem> weatherPoemList);
 
     @Delete
-    public abstract void delete(WeatherPoetry weatherPoetry);
+    public abstract void delete(WeatherPoem weatherPoem);
 
-    @Query("DELETE FROM weatherpoetry")
+    @Query("DELETE FROM weatherpoetry ")
     public abstract void deleteAll();
 
     @Query("SELECT * FROM weatherpoetry WHERE poem_title LIKE :poemTitle AND author LIKE :author LIMIT 1")
-    public abstract WeatherPoetry findByTitleAndAuthor(String poemTitle, String author);
+    public abstract WeatherPoem findByTitleAndAuthor(String poemTitle, String author);
 
     @Query("SELECT * FROM weatherpoetry WHERE author LIKE :author")
-    public abstract List<WeatherPoetry> findByAuthor(String author);
+    public abstract List<WeatherPoem> findByAuthor(String author);
 
     @Query("SELECT * FROM weatherpoetry WHERE poem_title LIKE :title")
-    public abstract List<WeatherPoetry> findByTitle(String title);
+    public abstract List<WeatherPoem> findByTitle(String title);
 
     @Transaction
-    public void updateData(List<WeatherPoetry> data){
+    public void updateData(List<WeatherPoem> data){
         insertAll(data);
     }
 

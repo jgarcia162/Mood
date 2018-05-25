@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.mood.R;
-import com.example.android.mood.model.WeatherPoetry;
+import com.example.android.mood.model.WeatherPoem;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import butterknife.ButterKnife;
  */
 
 public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder> {
-    private List<WeatherPoetry> data;
+    private List<WeatherPoem> data;
 
-    public PoemAdapter(List<WeatherPoetry> dataSet) {
+    public PoemAdapter(List<WeatherPoem> dataSet) {
         data = dataSet;
     }
 
@@ -59,7 +59,7 @@ public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(WeatherPoetry data) {
+        public void bind(WeatherPoem data) {
             //TODO remove gson serialization
 //            Poem poem = new Gson().fromJson(data.getPoem(), Poem.class);
 //            title.setText(poem.getTitle());

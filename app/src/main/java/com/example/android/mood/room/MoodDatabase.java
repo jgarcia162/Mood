@@ -15,7 +15,7 @@ import com.example.android.mood.model.WeatherPoetry;
  * Created by Joe on 4/7/18.
  */
 
-@Database(entities = {WeatherPoetry.class}, version = 2)
+@Database(entities = {WeatherPoetry.class}, version = 3)
 public abstract class MoodDatabase extends RoomDatabase {
     private static MoodDatabase database;
 

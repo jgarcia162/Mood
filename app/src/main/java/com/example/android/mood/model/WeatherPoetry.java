@@ -29,11 +29,35 @@ public class WeatherPoetry {
     @ColumnInfo(name = "mood")
     private String mood;
 
-
     public WeatherPoetry(String weather, String poem) {
         this.weather = weather;
         this.poem = poem;
     }
+
+    public String getMood() {
+        return mood;
+    }
+
+    public void setMood(String mood) {
+        this.mood = mood;
+    }
+
+    public String getPoemTitle() {
+        return poemTitle;
+    }
+
+    public void setPoemTitle(String poemTitle) {
+        this.poemTitle = poemTitle;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
 
     public int getTid() {
         return tid;

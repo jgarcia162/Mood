@@ -60,13 +60,9 @@ public class PoemAdapter extends RecyclerView.Adapter<PoemAdapter.PoemViewHolder
         }
 
         public void bind(WeatherPoem data) {
-            //TODO remove gson serialization
-//            Poem poem = new Gson().fromJson(data.getPoem(), Poem.class);
             title.setText(data.getPoemTitle());
             author.setText(data.getAuthor());
             poemText.setText(data.getPoem());
-//            WatsonHelper.getInstance().getTones(data.getPoem(),moodTextView);
         }
-
     }
 }

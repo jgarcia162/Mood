@@ -1,5 +1,8 @@
 package com.example.android.mood.model.weather;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
@@ -13,7 +16,7 @@ import java.util.Locale;
  * Created by Joe on 4/2/18.
  */
 
-public class Weather {
+public class Weather implements Parcelable{
     private long timestamp;
     private int maxTempC;
     private int maxTempF;
@@ -25,6 +28,29 @@ public class Weather {
 
     private String dateTimeISO;
 
+
+    protected Weather(Parcel in) {
+        timestamp = in.readLong();
+        maxTempC = in.readInt();
+        maxTempF = in.readInt();
+        minTempC = in.readInt();
+        minTempF = in.readInt();
+        weatherDescription = in.readString();
+        weatherPrimary = in.readString();
+        dateTimeISO = in.readString();
+    }
+
+    public static final Creator<Weather> CREATOR = new Creator<Weather>() {
+        @Override
+        public Weather createFromParcel(Parcel in) {
+            return new Weather(in);
+        }
+
+        @Override
+        public Weather[] newArray(int size) {
+            return new Weather[size];
+        }
+    };
 
     public String getDateTimeISO() {
         return dateTimeISO;
@@ -97,5 +123,20 @@ public class Weather {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(timestamp);
+        dest.writeInt(maxTempC);
+        dest.writeInt(maxTempF);
+        dest.writeInt(minTempC);
+        dest.writeInt(minTempF);
+        dest.writeString(weatherDescription);
+        dest.writeString(weatherPrimary);
+        dest.writeString(dateTimeISO);
+    }
 }

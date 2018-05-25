@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -40,7 +39,6 @@ public class WeatherFragment extends Fragment implements WatsonListener {
 
     //TODO change from list of weather to single weather item
 
-    @BindView(R.id.recycler_view)
     private List<Poem> poemList = new ArrayList<>();
     private Weather weather;
     private WeatherPoem weatherPoem;
@@ -127,6 +125,7 @@ public class WeatherFragment extends Fragment implements WatsonListener {
                         randomPoemIndex = ThreadLocalRandom.current().nextInt(0, poemList.size());
                         randomPoem = poemList.get(randomPoemIndex);
                         weatherPoem = new WeatherPoem(weather, randomPoem);
+                        saveDataToRoom(weatherPoem);
                         updateViews();
                     }
                 });
@@ -150,11 +149,21 @@ public class WeatherFragment extends Fragment implements WatsonListener {
                 .getDayForecast(location, WeatherConstants.ACCESS_ID, WeatherConstants.SECRET_KEY);
     }
 
-    private void saveDataToRoom(WeatherPoem data) {
+    private void saveDataToRoom(final WeatherPoem data) {
+        new Thread(){
+            @Override
+            public void run() {
+                            database.weatherPoemDao().insert(data);
+//                if (database.weatherPoemDao().findByTitleAndAuthor(data.getPoemTitle(), data.getAuthor()) == null) {
+//                    new Thread() {
+//                        @Override
+//                        public void run() {
+//                        }
+//                    }.start();
+//                }
+            }
+        }.start();
 
-        if (database.weatherPoetryDao().findByTitleAndAuthor(data.getPoemTitle(), data.getAuthor()) == null) {
-            database.weatherPoetryDao().insert(data);
-        }
     }
 
     @Override

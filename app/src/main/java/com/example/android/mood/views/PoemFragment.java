@@ -60,7 +60,7 @@ public class PoemFragment extends Fragment {
         new AsyncTask<Void,Void,List<WeatherPoem>>(){
             @Override
             protected List<WeatherPoem> doInBackground(Void... voids) {
-                return database.weatherPoetryDao().getAll();
+                return database.weatherPoemDao().getAll();
             }
 
             @Override

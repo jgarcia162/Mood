@@ -11,6 +11,6 @@ public interface RxAerisService {
     @GET("forecasts/{city}")
     Observable<WeatherResponse> getWeekForecast(@Path("city") String city, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
 
-    @GET("/forecasts/minneapolis,mn?from=today&to=today&")
+    @GET("/forecasts/{city}?from=today&to=today&")
     Observable<WeatherResponse> getDayForecast(@Path("city") String city, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
 }

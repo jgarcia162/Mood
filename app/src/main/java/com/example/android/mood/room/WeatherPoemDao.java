@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Dao
-public abstract class WeatherPoetryDao {
+public abstract class WeatherPoemDao {
     @Query("SELECT * FROM weatherpoetry ")
     public abstract List<WeatherPoem> getAll();
 

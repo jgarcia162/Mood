@@ -36,11 +36,11 @@ public class ExampleInstrumentedTest implements WatsonListener {
     @Test
     public void checkRoomSize() {
         MoodDatabase database = Room.databaseBuilder(appContext, MoodDatabase.class, appContext.getString(R.string.database_name)).build();
-        assertNotEquals(0, database.weatherPoetryDao().getAll().size());
+        assertNotEquals(0, database.weatherPoemDao().getAll().size());
     }
 
     public String getTestPoem() {
-        return MoodDatabase.getInstance(appContext).weatherPoetryDao().getAll().get(0).getPoem();
+        return MoodDatabase.getInstance(appContext).weatherPoemDao().getAll().get(0).getPoem();
     }
 
     @Override

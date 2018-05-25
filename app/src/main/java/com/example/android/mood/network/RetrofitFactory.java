@@ -47,9 +47,7 @@ public class RetrofitFactory {
                             .create())
                     .addConverterFactory(GsonConverterFactory
                             .create())
-                    .client(createOkHttpClient())
                     .build();
-
         }
 
         return poetryInstance;

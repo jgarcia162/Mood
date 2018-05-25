@@ -19,7 +19,7 @@ import com.example.android.mood.model.WeatherPoem;
 public abstract class MoodDatabase extends RoomDatabase {
     private static MoodDatabase database;
 
-    public abstract WeatherPoetryDao weatherPoetryDao();
+    public abstract WeatherPoemDao weatherPoemDao();
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override

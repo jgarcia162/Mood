@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.android.mood.R;
 import com.example.android.mood.model.weather.Weather;
+import com.qhutch.elevationimageview.ElevationImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,9 +24,11 @@ public class WeatherFragment extends Fragment {
     private Weather weather;
     @BindView(R.id.weather_date_tv)
     public TextView dayOfTheWeekTV;
+    @BindView(R.id.weather_tv)
+    public TextView weatherTV;
+    @BindView(R.id.weather_itemview_icon)
+    public ElevationImageView elevationImageView;
     private final String TAG = getClass().getCanonicalName();
-
-    //TODO change from list of weather to single weather item
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,15 +41,17 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.weather_item_view, container, false);
-        ButterKnife.bind(this, view);
         return view;
     }
 
     @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //TODO Bind views
+        ButterKnife.bind(this, view);
         dayOfTheWeekTV.setText(weather.getFullDayOfTheWeekName());
+        weatherTV.setText(getResources().getString(R.string.weather_title, weather.getWeatherPrimary(), weather.getMaxTempF(), weather.getMinTempF()));
+
+
     }
 
     private void getLocation() {

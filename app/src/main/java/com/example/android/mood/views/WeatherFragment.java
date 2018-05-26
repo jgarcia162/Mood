@@ -47,8 +47,6 @@ public class WeatherFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //TODO Bind views
         dayOfTheWeekTV.setText(weather.getFullDayOfTheWeekName());
-
-
     }
 
     private void getLocation() {

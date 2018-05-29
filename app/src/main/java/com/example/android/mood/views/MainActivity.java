@@ -3,12 +3,11 @@ package com.example.android.mood.views;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoem;
 import com.example.android.mood.model.poems.Poem;
@@ -31,7 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class MainActivity extends AppCompatActivity implements WatsonListener{
+public class MainActivity extends AppCompatActivity implements WatsonListener {
     private MoodDatabase database;
     private MoodApiHelper moodApiHelper;
     private CompositeDisposable compositeDisposable;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener{
 
     private static final int NUM_PAGES = 2;
     @BindView(R.id.bottom_navigation)
-    public BottomNavigationView bottomNavigationView;
+    public AHBottomNavigation bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener{
         moodApiHelper = new MoodApiHelper();
         compositeDisposable = new CompositeDisposable();
 
+
         Observable<Object> allDataObservable = createWeatherAndPoemObservables();
         subscribeDataObserver(allDataObservable);
 
@@ -66,16 +66,39 @@ public class MainActivity extends AppCompatActivity implements WatsonListener{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
+        setUpBottomNavigationBar();
+    }
+
+    private void setUpBottomNavigationBar() {
+        AHBottomNavigationItem weatherItem = new AHBottomNavigationItem(getString(R.string.weather), R.drawable.cloudy);
+        AHBottomNavigationItem poemItem = new AHBottomNavigationItem(getString(R.string.poems), R.drawable.ellipses);
+        AHBottomNavigationItem profileItem = new AHBottomNavigationItem(getString(R.string.profile), R.drawable.thunderstorm);
+
+
+        bottomNavigationView.addItem(weatherItem);
+        bottomNavigationView.addItem(poemItem);
+        bottomNavigationView.addItem(profileItem);
+        bottomNavigationView.setColored(true);
+//        bottomNavigationView.setInactiveColor(Color.parseColor("#747474"));
+        bottomNavigationView.setAccentColor(R.color.colorAccent);
+        bottomNavigationView.setForceTint(true);
+
+        bottomNavigationView.setOnTabSelectedListener(
+                new AHBottomNavigation.OnTabSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_weather_item:
-                               showWeatherFragment();
+                    public boolean onTabSelected(int position, boolean wasSelected) {
+                        switch (position) {
+                            case 0:
+                                showWeatherFragment();
+                                bottomNavigationView.enableItemAtPosition(0);
                                 break;
-                            case R.id.menu_poems_item:
-                                fragmentManager.beginTransaction().replace(R.id.fragment_container,new PoemFragment(),"poem_fragment").addToBackStack("poem_fragment").commit();
+                            case 1:
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, new PoemFragment(), "poem_fragment").addToBackStack("poem_fragment").commit();
+                                bottomNavigationView.enableItemAtPosition(1);
+                                break;
+                            case 2:
+                                //TODO add profile fragment
+                                bottomNavigationView.enableItemAtPosition(2);
                         }
                         return true;
                     }
@@ -134,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener{
                     @Override
                     public void onComplete() {
                         //TODO match weather to a poem
-                        randomPoemIndex = new Random().nextInt(poemList.size()+1);
+                        randomPoemIndex = new Random().nextInt(poemList.size() + 1);
                         randomPoem = poemList.get(randomPoemIndex);
                         weatherPoem = new WeatherPoem(weather, randomPoem);
                         saveDataToRoom(weatherPoem);
@@ -147,10 +170,10 @@ public class MainActivity extends AppCompatActivity implements WatsonListener{
         WeatherFragment weatherFragment = new WeatherFragment();
         Bundle bundle = new Bundle();
 
-        bundle.putParcelable("weather",weather);
+        bundle.putParcelable("weather", weather);
         weatherFragment.setArguments(bundle);
 
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,weatherFragment,"weather_fragment").addToBackStack("weather_fragment").commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, weatherFragment, "weather_fragment").addToBackStack("weather_fragment").commit();
     }
 
     private void saveDataToRoom(final WeatherPoem data) {

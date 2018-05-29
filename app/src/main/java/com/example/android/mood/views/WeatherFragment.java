@@ -40,14 +40,14 @@ public class WeatherFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.weather_item_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
         dayOfTheWeekTV.setText(weather.getFullDayOfTheWeekName());
         weatherTV.setText(getResources().getString(R.string.weather_title, weather.getWeatherPrimary(), weather.getMaxTempF(), weather.getMinTempF()));
 

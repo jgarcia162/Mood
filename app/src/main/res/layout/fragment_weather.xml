@@ -12,7 +12,7 @@
         android:layout_height="111dp"
         android:layout_alignParentStart="true"
         android:elevation="@dimen/cardview_default_elevation"
-        android:src="@drawable/sunny"
+        android:src="@android:drawable/sym_def_app_icon"
         tools:layout_editor_absoluteX="126dp"
         tools:layout_editor_absoluteY="62dp"
         tools:ignore="MissingConstraints" />
@@ -102,6 +102,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_constraint"
+        android:layout_height="148dp"
+        android:clipToPadding="false"
+        android:padding="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="355dp" />
 
 
 </android.support.constraint.ConstraintLayout>

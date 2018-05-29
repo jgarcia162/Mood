@@ -14,7 +14,8 @@
         android:elevation="@dimen/cardview_default_elevation"
         android:src="@drawable/sunny"
         tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="62dp" />
+        tools:layout_editor_absoluteY="62dp"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/weather_date_tv"
@@ -71,7 +72,7 @@
         android:padding="2dp"
         android:text="64"
         android:textAlignment="center"
-        android:textColor="@androi@color/colorFontDefaultd:color/black"
+        android:textColor="@android:color/black"
         android:textSize="64sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,11 +86,12 @@
         android:layout_marginStart="8dp"
         android:gravity="center"
         android:text="H 50  L 30"
-        android:textColor="@android@color/colorFontDefault:color/black"
+        android:textColor="@android:color/black"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/textView2"
-        tools:layout_editor_absoluteY="328dp" />
+        tools:layout_editor_absoluteY="328dp"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/imageView"

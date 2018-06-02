@@ -2,9 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_weather_item"
-        android:title="@string/weather"/>
+        android:title="@string/weather"
+        android:icon="@drawable/baseline_wb_cloudy_white_18dp"/>
 
     <item android:id="@+id/menu_poems_item"
-        android:title="@string/poems"/>
+        android:title="@string/poems"
+        android:icon="@drawable/baseline_sentiment_satisfied_alt_white_18dp"/>
 
 </menu>

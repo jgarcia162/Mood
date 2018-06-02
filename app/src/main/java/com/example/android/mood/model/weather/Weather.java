@@ -22,6 +22,8 @@ public class Weather implements Parcelable{
     private int maxTempF;
     private int minTempC;
     private int minTempF;
+    private String icon;
+
     @SerializedName("weather")
     private String weatherDescription;
     private String weatherPrimary;
@@ -35,6 +37,7 @@ public class Weather implements Parcelable{
         maxTempF = in.readInt();
         minTempC = in.readInt();
         minTempF = in.readInt();
+        icon = in.readString();
         weatherDescription = in.readString();
         weatherPrimary = in.readString();
         dateTimeISO = in.readString();
@@ -74,6 +77,10 @@ public class Weather implements Parcelable{
 
     public int getMinTempF() {
         return minTempF;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     public String getWeatherDescription() {
@@ -136,7 +143,10 @@ public class Weather implements Parcelable{
         dest.writeInt(minTempC);
         dest.writeInt(minTempF);
         dest.writeString(weatherDescription);
+        dest.writeString(icon);
         dest.writeString(weatherPrimary);
         dest.writeString(dateTimeISO);
     }
+
+
 }

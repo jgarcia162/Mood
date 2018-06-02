@@ -3,10 +3,10 @@
 
     <item android:id="@+id/menu_weather_item"
         android:title="@string/weather"
-        android:icon="@drawable/baseline_wb_cloudy_white_18dp"/>
+        android:icon="@drawable/cloud"/>
 
     <item android:id="@+id/menu_poems_item"
         android:title="@string/poems"
-        android:icon="@drawable/baseline_sentiment_satisfied_alt_white_18dp" />
+        android:icon="@drawable/ic_poems_white" />
 
 </menu>

@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorMainBackground"
     android:orientation="vertical">
 
     <com.qhutch.elevationimageview.ElevationImageView
@@ -58,7 +59,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Time Updated"
-        android:textColor="@color/colorFontDefault"
+        android:textColor="@android:color/black"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/weather_date_tv"
         app:layout_constraintStart_toEndOf="@+id/imageView"

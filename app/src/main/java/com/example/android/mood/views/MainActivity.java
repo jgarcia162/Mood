@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
                 return true;
             }
         });
-
     }
 
 

@@ -62,6 +62,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         }
 
         public void bind(Weather data) {
+//            elevationImageView.setImageDrawable(itemView.getContext().getDrawable());
             dateTV.setText(data.getFullDayOfTheWeekName());
             weatherTV.setText(itemView.getContext().getResources().getString(R.string.weather_title, data.getWeatherPrimary(), data.getMaxTempF(), data.getMinTempF()));
         }

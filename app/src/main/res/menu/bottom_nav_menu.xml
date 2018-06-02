@@ -7,6 +7,6 @@
 
     <item android:id="@+id/menu_poems_item"
         android:title="@string/poems"
-        android:icon="@drawable/baseline_sentiment_satisfied_alt_white_18dp"/>
+        android:icon="@drawable/baseline_sentiment_satisfied_alt_white_18dp" />
 
 </menu>

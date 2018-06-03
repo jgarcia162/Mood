@@ -15,8 +15,8 @@ import retrofit2.http.Path;
 
 public interface PoetryService {
     //Gets all the authors in the API DB
-//    @GET("author")
-//    Call<List<String>> getAuthors();
+    @GET("author")
+    Call<List<String>> getAllAuthors();
 
     /**
     * Getting the authors using RxJava requires an Observable return type */

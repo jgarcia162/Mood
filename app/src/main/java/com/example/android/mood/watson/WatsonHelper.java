@@ -2,7 +2,6 @@ package com.example.android.mood.watson;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.android.mood.R;
 import com.ibm.watson.developer_cloud.http.ServiceCallback;
@@ -17,12 +16,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-
-import static android.content.ContentValues.TAG;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WatsonHelper {
     private static ToneAnalyzer toneAnalyzer;
     private static WatsonHelper instance;
+    public final static Set<String> possibleTones = new HashSet<>(Arrays.asList("anger", "disgust", "fear", "joy", "sadness", "analytical", "confident", "tentative"));
 
     public WatsonHelper() {
     }
@@ -31,6 +32,7 @@ public class WatsonHelper {
         if (instance == null) {
             instance = new WatsonHelper();
             toneAnalyzer = new ToneAnalyzer("2018-04-10");
+//            toneAnalyzer = new ToneAnalyzer("2017-09-21");
         }
         return instance;
     }
@@ -50,7 +52,6 @@ public class WatsonHelper {
 
             String password = credentials.getString("password");
 
-            Log.d(TAG, "configureToneAnalyzer: " + username + " - " + password);
 
             toneAnalyzer.setUsernameAndPassword(username, password);
 
@@ -59,15 +60,31 @@ public class WatsonHelper {
         }
     }
 
-    public void getTone(String text, final WatsonListener listener) {
-        Log.d(TAG, "getTone: ");
+    public void getWeatherTone(String text, final WatsonListener listener) {
         ToneOptions options = new ToneOptions.Builder().html(text).build();
 
         toneAnalyzer.tone(options).enqueue(new ServiceCallback<ToneAnalysis>() {
             @Override
             public void onResponse(ToneAnalysis response) {
                 DocumentAnalysis documentAnalysis = response.getDocumentTone();
-                listener.onTonesFetched(documentAnalysis.getTones().get(0).getToneName());
+                listener.onWeatherToneFetched(documentAnalysis.getTones().get(0).getToneName());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void getPoemTone(String text, final WatsonListener listener) {
+        ToneOptions options = new ToneOptions.Builder().html(text).build();
+
+        toneAnalyzer.tone(options).enqueue(new ServiceCallback<ToneAnalysis>() {
+            @Override
+            public void onResponse(ToneAnalysis response) {
+                DocumentAnalysis documentAnalysis = response.getDocumentTone();
+                listener.onPoemToneFetched(documentAnalysis.getTones().get(0).getToneName());
             }
 
             @Override
@@ -79,35 +96,30 @@ public class WatsonHelper {
 
     /**
      * Observable<String[]> poemObservable = Observable.just(WatsonHelper.getInstance().getTone(poemList.get(randomPoemIndex).getFullPoem()));
-
-     poemObservable.subscribe(new Observer<String[]>() {
-    @Override
-    public void onSubscribe(Disposable d) {
-    }
-
-    @Override
-    public void onNext(String[] strings) {
-    poemList.get(randomPoemIndex).setMood(strings[0]);
-    Toast.makeText(context, "OBSERVABLE", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
-    public void onComplete() {
-
-    }
-    }
-     );*/
+     * <p>
+     * poemObservable.subscribe(new Observer<String[]>() {
+     *
+     * @Override public void onSubscribe(Disposable d) {
+     * }
+     * @Override public void onNext(String[] strings) {
+     * poemList.get(randomPoemIndex).setMood(strings[0]);
+     * Toast.makeText(context, "OBSERVABLE", Toast.LENGTH_SHORT).show();
+     * <p>
+     * }
+     * @Override public void onError(Throwable e) {
+     * <p>
+     * }
+     * @Override public void onComplete() {
+     * <p>
+     * }
+     * }
+     * );
+     */
 
     public String getTone(String text) {
         ToneOptions options = new ToneOptions.Builder().html(text).build();
 
-       final String[] tone = new String[1];
+        final String[] tone = new String[1];
 
         toneAnalyzer.tone(options).enqueue(new ServiceCallback<ToneAnalysis>() {
             @Override

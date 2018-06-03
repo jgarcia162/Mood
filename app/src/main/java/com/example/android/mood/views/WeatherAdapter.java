@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.android.mood.R;
 import com.example.android.mood.model.weather.Weather;
+import com.example.android.mood.model.weather.WeatherConstants;
 import com.qhutch.elevationimageview.ElevationImageView;
 
 import java.util.List;
@@ -48,9 +49,9 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
 
     public class WeatherViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.weather_date_tv)
+        @BindView(R.id.weekday_tv)
         public TextView dateTV;
-        @BindView(R.id.weather_tv)
+        @BindView(R.id.temp_tv)
         public TextView weatherTV;
         @BindView(R.id.weather_itemview_icon)
         public ElevationImageView elevationImageView;
@@ -62,9 +63,9 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         }
 
         public void bind(Weather data) {
-            elevationImageView.setImageDrawable(itemView.getContext().getDrawable(R.drawable.clear));
+            elevationImageView.setImageDrawable(WeatherConstants.getIconDrawable(itemView.getContext(),data.getIcon()));
             dateTV.setText(data.getFullDayOfTheWeekName());
-            weatherTV.setText(itemView.getContext().getResources().getString(R.string.weather_title, data.getWeatherPrimary(), data.getMaxTempF(), data.getMinTempF()));
+            weatherTV.setText(data.getMaxTempF());
         }
     }
 }

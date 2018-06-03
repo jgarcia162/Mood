@@ -23,12 +23,14 @@ public class Weather implements Parcelable{
     private int minTempC;
     private int minTempF;
     private String icon;
+    private String dateTimeISO;
 
     @SerializedName("weather")
     private String weatherDescription;
     private String weatherPrimary;
+    private String tone;
 
-    private String dateTimeISO;
+
 
 
     protected Weather(Parcel in) {
@@ -38,9 +40,10 @@ public class Weather implements Parcelable{
         minTempC = in.readInt();
         minTempF = in.readInt();
         icon = in.readString();
+        dateTimeISO = in.readString();
         weatherDescription = in.readString();
         weatherPrimary = in.readString();
-        dateTimeISO = in.readString();
+        tone = in.readString();
     }
 
     public static final Creator<Weather> CREATOR = new Creator<Weather>() {
@@ -142,11 +145,19 @@ public class Weather implements Parcelable{
         dest.writeInt(maxTempF);
         dest.writeInt(minTempC);
         dest.writeInt(minTempF);
+        dest.writeString(dateTimeISO);
         dest.writeString(weatherDescription);
         dest.writeString(icon);
         dest.writeString(weatherPrimary);
-        dest.writeString(dateTimeISO);
+        dest.writeString(tone);
     }
 
 
+    public String getTone() {
+        return tone;
+    }
+
+    public void setTone(String tone) {
+        this.tone = tone;
+    }
 }

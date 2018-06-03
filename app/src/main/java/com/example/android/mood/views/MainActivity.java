@@ -4,19 +4,22 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoem;
 import com.example.android.mood.model.poems.Poem;
 import com.example.android.mood.model.weather.Weather;
-import com.example.android.mood.model.weather.WeatherConstants;
 import com.example.android.mood.model.weather.WeatherResponse;
 import com.example.android.mood.network.MoodApiHelper;
 import com.example.android.mood.room.MoodDatabase;
+import com.example.android.mood.watson.WatsonHelper;
 import com.example.android.mood.watson.WatsonListener;
 
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     private Poem randomPoem;
     private FragmentManager fragmentManager;
     private int randomPoemIndex;
+    private View rootView;
 
     private static final int NUM_PAGES = 2;
     @BindView(R.id.bottom_navigation)
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rootView = findViewById(R.id.activity_main_root);
         ButterKnife.bind(this);
 
         getDatabase();
@@ -62,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
 
         Observable<Object> allDataObservable = createWeatherAndPoemObservables();
         subscribeDataObserver(allDataObservable);
+
+//        moodApiHelper
+//                .getRxAerisService()
+//                .getWeekForecast("New York, NY", WeatherConstants.ACCESS_ID, WeatherConstants.SECRET_KEY);
 
         //TODO remove this threadpolicy
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -90,25 +99,20 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     }
 
 
+    private Observable<List<Poem>> getPoemsObservable(String author) {
+        return moodApiHelper.getPoems(author);
+    }
+
+    private Observable<WeatherResponse> getAerisObservable(String location) {
+        return moodApiHelper.getDayForecast(location);
+    }
+
     private Observable<Object> createWeatherAndPoemObservables() {
         //TODO change hardcoded location to use coordinates of current location
         Observable<WeatherResponse> weatherObservable = getAerisObservable("New York,NY");
         //TODO change hardcoded author name
         Observable<List<Poem>> poemsObservable = getPoemsObservable("William Shakespeare");
         return Observable.concat(weatherObservable, poemsObservable);
-    }
-
-    private Observable<List<Poem>> getPoemsObservable(String author) {
-        return moodApiHelper
-                .getRxPoetryService()
-                .getAuthorWorks(author);
-    }
-
-
-    private Observable<WeatherResponse> getAerisObservable(String location) {
-        return moodApiHelper
-                .getRxAerisService()
-                .getDayForecast(location, WeatherConstants.ACCESS_ID, WeatherConstants.SECRET_KEY);
     }
 
     @SuppressLint("CheckResult")
@@ -136,18 +140,29 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        showErrorMessage();
                     }
 
                     @Override
                     public void onComplete() {
-                        //TODO match weather to a poem
-                        randomPoemIndex = new Random().nextInt(poemList.size() + 1);
-                        randomPoem = poemList.get(randomPoemIndex);
-                        weatherPoem = new WeatherPoem(weather, randomPoem);
-                        saveDataToRoom(weatherPoem);
-                        showWeatherFragment();
+                        getRandomPoem();
+                        allDataFetched();
                     }
                 });
+    }
+
+    private void getRandomPoem() {
+        randomPoemIndex = new Random().nextInt(poemList.size() + 1);
+        randomPoem = poemList.get(randomPoemIndex);
+    }
+
+    private void allDataFetched() {
+        WatsonHelper.getInstance().getWeatherTone(weather.getWeatherDescription(), this);
+    }
+
+    private void showErrorMessage() {
+        Snackbar snackbar = Snackbar.make(rootView, "Something went wrong", BaseTransientBottomBar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private void showWeatherFragment() {
@@ -190,9 +205,22 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     }
 
     @Override
-    public void onTonesFetched(String tone) {
+    public void onWeatherToneFetched(String tone) {
         //TODO run in background with RxJava
-        poemList.get(randomPoemIndex).setMood(tone);
+        weather.setTone(tone);
+        WatsonHelper.getInstance().getPoemTone(randomPoem.getFullPoem(), this);
+    }
+
+    @Override
+    public void onPoemToneFetched(String tone) {
+        if (!weather.getTone().equals(tone)) {
+            getRandomPoem();
+            WatsonHelper.getInstance().getPoemTone(randomPoem.getFullPoem(), this);
+        } else {
+            weatherPoem = new WeatherPoem(weather, randomPoem);
+            saveDataToRoom(weatherPoem);
+            showWeatherFragment();
+        }
     }
 
     @Override

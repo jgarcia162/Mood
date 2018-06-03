@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,16 @@ import butterknife.ButterKnife;
 
 public class WeatherFragment extends Fragment {
     private Weather weather;
+    @BindView(R.id.recyclerView)
+    public RecyclerView weatherRecyclerView;
     @BindView(R.id.weather_date_tv)
     public TextView dayOfTheWeekTV;
+
     @BindView(R.id.weather_tv)
     public TextView weatherTV;
+
     @BindView(R.id.weather_itemview_icon)
     public ElevationImageView elevationImageView;
-    private final String TAG = getClass().getCanonicalName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

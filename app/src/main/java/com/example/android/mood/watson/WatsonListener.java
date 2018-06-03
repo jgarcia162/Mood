@@ -1,5 +1,6 @@
 package com.example.android.mood.watson;
 
 public interface WatsonListener {
-    void onTonesFetched(String tone);
+    void onWeatherToneFetched(String tone);
+    void onPoemToneFetched(String tone);
 }

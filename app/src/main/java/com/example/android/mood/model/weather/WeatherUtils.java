@@ -6,9 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WeatherUtils {
-    private static Map<String, Integer> drawablesMap = null;
+    private static Map<String, Integer> drawablesMap;
 
-    private static void initializeMap() {
+    public static int getAlternateResourceId(String iconName) {
+        iconName = iconName.replace(".png","");
+        if (drawablesMap == null) {
+            fillDrawablesResourceMap();
+        }
+        return drawablesMap.get(iconName);
+    }
+
+    private static void fillDrawablesResourceMap() {
         drawablesMap = new HashMap<>();
         drawablesMap.put("am_pcloudyr", R.drawable.rain);
         drawablesMap.put("am_showers", R.drawable.showers);
@@ -101,14 +109,4 @@ public class WeatherUtils {
         drawablesMap.put("wintrymix", R.drawable.rainandsnow);
         drawablesMap.put("wintrymixn", R.drawable.rainandsnow);
     }
-
-    public static int getAlternateResourceId(String iconName) {
-        iconName = iconName.replace(".png","");
-        if (drawablesMap == null) {
-            initializeMap();
-        }
-
-        return drawablesMap.get(iconName);
-    }
-
 }

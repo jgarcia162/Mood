@@ -6,26 +6,24 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="10dp"
     android:animateLayoutChanges="true"
-    android:background="@android:color/transparent"
+    android:background="@color/colorMainBackground"
     app:cardCornerRadius="2dp">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMainBackground">
 
 
         <com.qhutch.elevationimageview.ElevationImageView
             android:id="@+id/weather_itemview_icon"
-            android:layout_width="179dp"
-            android:layout_height="166dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_alignParentStart="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:elevation="@dimen/cardview_default_elevation"
-            android:src="@android:drawable/sym_def_app_icon"
+            android:elevation="4dp"
+            tools:src="@android:drawable/sym_def_app_icon"
+            android:background="@color/colorMainBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,12 +33,12 @@
             android:id="@+id/weekday_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:background="@android:color/transparent"
             tools:text="Monday"
-            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
@@ -55,8 +53,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            tools:text="85"
-            android:textSize="32sp"
+            android:textSize="20sp"
+            android:background="@android:color/transparent"
+            tools:text="75"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weather_itemview_icon" />

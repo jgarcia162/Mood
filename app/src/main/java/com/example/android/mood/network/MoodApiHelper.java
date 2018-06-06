@@ -28,6 +28,10 @@ public class MoodApiHelper {
         return getRxAerisService().getDayForecast(city, WeatherConstants.ACCESS_ID,WeatherConstants.SECRET_KEY);
     }
 
+    public Observable<WeatherResponse> getWeekForecast(String city){
+        return getRxAerisService().getWeekForecast(city, WeatherConstants.ACCESS_ID,WeatherConstants.SECRET_KEY);
+    }
+
     public RxPoetryService getRxPoetryService() {
         return RetrofitFactory.getPoetryRetrofitInstance().create(RxPoetryService.class);
     }

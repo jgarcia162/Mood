@@ -25,6 +25,7 @@ public class WatsonHelper {
     private static WatsonHelper instance;
     public final static Set<String> possibleTones = new HashSet<>(Arrays.asList("anger", "disgust", "fear", "joy", "sadness", "analytical", "confident", "tentative"));
 
+
     public WatsonHelper() {
     }
 
@@ -68,6 +69,8 @@ public class WatsonHelper {
             public void onResponse(ToneAnalysis response) {
                 DocumentAnalysis documentAnalysis = response.getDocumentTone();
                 listener.onWeatherToneFetched(documentAnalysis.getTones().get(0).getToneName());
+
+//                listener.onWeatherToneFetched(documentAnalysis.getToneCategories().get(0).getTones().get(0).getToneName());
             }
 
             @Override
@@ -84,7 +87,11 @@ public class WatsonHelper {
             @Override
             public void onResponse(ToneAnalysis response) {
                 DocumentAnalysis documentAnalysis = response.getDocumentTone();
-                listener.onPoemToneFetched(documentAnalysis.getTones().get(0).getToneName());
+                if (documentAnalysis.getTones().size() != 0) {
+                    listener.onPoemToneFetched(documentAnalysis.getTones().get(0).getToneId());
+                }else {
+                    listener.onPoemToneFetched(null);
+                }
             }
 
             @Override

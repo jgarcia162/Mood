@@ -52,6 +52,19 @@ public class PoemFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getPoemsFromDB();
+//        deletePoemsFromDB();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void deletePoemsFromDB() {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                database.weatherPoemDao().deleteAll();
+                return null;
+            }
+        }.execute();
+
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -75,5 +88,11 @@ public class PoemFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         poemsRecyclerView.setLayoutManager(manager);
         poemsRecyclerView.setAdapter(new PoemAdapter(dataSet));
+    }
+
+    @Override
+    public void onDestroy() {
+        database.destroyInstance();
+        super.onDestroy();
     }
 }

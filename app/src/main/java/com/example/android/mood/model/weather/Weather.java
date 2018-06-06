@@ -22,6 +22,7 @@ public class Weather implements Parcelable{
     private int maxTempF;
     private int minTempC;
     private int minTempF;
+    private int avgTempF;
     private String icon;
     private String dateTimeISO;
 
@@ -39,6 +40,7 @@ public class Weather implements Parcelable{
         maxTempF = in.readInt();
         minTempC = in.readInt();
         minTempF = in.readInt();
+        avgTempF = in.readInt();
         icon = in.readString();
         dateTimeISO = in.readString();
         weatherDescription = in.readString();
@@ -145,6 +147,7 @@ public class Weather implements Parcelable{
         dest.writeInt(maxTempF);
         dest.writeInt(minTempC);
         dest.writeInt(minTempF);
+        dest.writeInt(avgTempF);
         dest.writeString(dateTimeISO);
         dest.writeString(weatherDescription);
         dest.writeString(icon);
@@ -159,5 +162,13 @@ public class Weather implements Parcelable{
 
     public void setTone(String tone) {
         this.tone = tone;
+    }
+
+    public int getAvgTempF() {
+        return avgTempF;
+    }
+
+    public void setAvgTempF(int avgTempF) {
+        this.avgTempF = avgTempF;
     }
 }

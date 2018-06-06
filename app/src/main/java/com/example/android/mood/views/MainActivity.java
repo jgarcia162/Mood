@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
         setContentView(R.layout.activity_main);
         rootView = findViewById(R.id.activity_main_root);
         ButterKnife.bind(this);
+        WatsonHelper.getInstance().configureToneAnalyzer(getApplicationContext());
 
         getDatabase();
 
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
         //TODO change hardcoded location to use coordinates of current location
         Observable<WeatherResponse> weatherObservable = getAerisObservable("New York,NY");
         //TODO change hardcoded author name
-        Observable<List<Poem>> poemsObservable = getPoemsObservable("William Shakespeare");
+        Observable<List<Poem>> poemsObservable = getPoemsObservable("Edgar Allan Poe");
         return Observable.concat(weatherObservable, poemsObservable);
     }
 
@@ -152,12 +154,19 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     }
 
     private void getRandomPoem() {
-        randomPoemIndex = new Random().nextInt(poemList.size() + 1);
+        randomPoemIndex = new Random().nextInt(poemList.size() );
         randomPoem = poemList.get(randomPoemIndex);
     }
 
     private void allDataFetched() {
         WatsonHelper.getInstance().getWeatherTone(weather.getWeatherDescription(), this);
+    }
+
+    @Override
+    public void onWeatherToneFetched(String tone) {
+        //TODO run in background with RxJava
+        weather.setTone(tone);
+        WatsonHelper.getInstance().getPoemTone(randomPoem.getFullPoem(), this);
     }
 
     private void showErrorMessage() {
@@ -204,15 +213,14 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
         }
     }
 
-    @Override
-    public void onWeatherToneFetched(String tone) {
-        //TODO run in background with RxJava
-        weather.setTone(tone);
-        WatsonHelper.getInstance().getPoemTone(randomPoem.getFullPoem(), this);
-    }
 
     @Override
     public void onPoemToneFetched(String tone) {
+        Log.d("POEM TONE", "onPoemToneFetched: " + tone);
+        weatherPoem = new WeatherPoem(weather, randomPoem);
+        showWeatherFragment();
+
+        /*
         if (!weather.getTone().equals(tone)) {
             getRandomPoem();
             WatsonHelper.getInstance().getPoemTone(randomPoem.getFullPoem(), this);
@@ -220,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
             weatherPoem = new WeatherPoem(weather, randomPoem);
             saveDataToRoom(weatherPoem);
             showWeatherFragment();
-        }
+        }*/
     }
 
     @Override

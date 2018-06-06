@@ -3,7 +3,7 @@
     <string name="error">Something went wrong :(</string>
     <string name="weather">Weather</string>
     <string name="poems">Poems</string>
-    <string name="weather_title">%1$s  \n  %2$d  %3$d</string>
+    <string name="hi_low">HI %1$d Low %2$d</string>
     <string name="database_name" translatable="false">mood-database</string>
     <string name="profile">Profile</string>
 </resources>

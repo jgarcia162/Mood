@@ -1,7 +1,5 @@
 package com.example.android.mood.model.poems;
 
-import android.os.Parcelable;
-
 import java.util.Objects;
 
 /**
@@ -9,9 +7,9 @@ import java.util.Objects;
  */
 
 public class Poem {
-    public String title;
-    public String author;
-    public String[] lines;
+    private String title;
+    private String author;
+    private String[] lines;
     private String mood;
 
     public String getMood() {

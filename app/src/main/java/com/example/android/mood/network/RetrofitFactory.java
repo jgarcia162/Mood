@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitFactory {
     public static Retrofit aerisInstance;
     public static Retrofit poetryInstance;
+    public static OkHttpClient httpClientInstance;
 
     public static Retrofit getAerisRetrofitInstance() {
         if (aerisInstance == null) {
@@ -26,6 +27,7 @@ public class RetrofitFactory {
                             .create())
                     .addConverterFactory(GsonConverterFactory
                             .create())
+                    .client(getHttpClientInstance())
                     .build();
         }
 
@@ -47,10 +49,18 @@ public class RetrofitFactory {
                             .create())
                     .addConverterFactory(GsonConverterFactory
                             .create())
+                    .client(getHttpClientInstance())
                     .build();
         }
 
         return poetryInstance;
+    }
+
+    public static OkHttpClient getHttpClientInstance() {
+        if (httpClientInstance == null) {
+            httpClientInstance = createOkHttpClient();
+        }
+        return httpClientInstance;
     }
 
     public <S> S getPoetryService(Class<S> serviceClass) {

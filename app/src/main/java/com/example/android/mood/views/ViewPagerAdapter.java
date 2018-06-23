@@ -1,31 +1,31 @@
 package com.example.android.mood.views;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.android.mood.R;
+import com.example.android.mood.model.weather.Weather;
 
-/**
- * Created by Joe on 4/4/18.
- */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private int NUM_PAGES = 2;
-    private Context context;
+    private Weather weather;
 
-    public ViewPagerAdapter(Context context, FragmentManager fm) {
+    ViewPagerAdapter(FragmentManager fm, Weather weather) {
         super(fm);
-        this.context = context;
+        this.weather = weather;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new WeatherFragment();
+                Bundle bundle = new Bundle();
+                WeatherFragment weatherFragment = new WeatherFragment();
+                bundle.putParcelable("weather", weather);
+                weatherFragment.setArguments(bundle);
+                return weatherFragment;
             case 1:
                 return new PoemFragment();
             default:
@@ -35,7 +35,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return NUM_PAGES;
+        return 2;
     }
 
     @Nullable
@@ -43,12 +43,17 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return context.getString(R.string.weather);
+                return "Weather";
             case 1:
-                return context.getString(R.string.poems);
+                return "Poems";
             default:
                 return null;
         }
 
+    }
+
+    public void setWeather(Weather newWeather){
+        weather = newWeather;
+        notifyDataSetChanged();
     }
 }

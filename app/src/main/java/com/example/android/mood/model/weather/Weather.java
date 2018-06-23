@@ -16,8 +16,9 @@ import java.util.Locale;
  * Created by Joe on 4/2/18.
  */
 
-public class Weather implements Parcelable{
+public class Weather implements Parcelable {
     private long timestamp;
+    private int iconResource;
     private int maxTempC;
     private int maxTempF;
     private int minTempC;
@@ -25,17 +26,15 @@ public class Weather implements Parcelable{
     private int avgTempF;
     private String icon;
     private String dateTimeISO;
-
     @SerializedName("weather")
     private String weatherDescription;
     private String weatherPrimary;
     private String tone;
 
 
-
-
     protected Weather(Parcel in) {
         timestamp = in.readLong();
+        iconResource = in.readInt();
         maxTempC = in.readInt();
         maxTempF = in.readInt();
         minTempC = in.readInt();
@@ -59,6 +58,14 @@ public class Weather implements Parcelable{
             return new Weather[size];
         }
     };
+
+    public int getIconResource() {
+        return iconResource;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
+    }
 
     public String getDateTimeISO() {
         return dateTimeISO;
@@ -105,7 +112,7 @@ public class Weather implements Parcelable{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss-HH:mm", Locale.getDefault());
         try {
             Date date = simpleDateFormat.parse(this.dateTimeISO); //2016-12-23T07:00:00-05:00
-            dayOfTheWeek = new SimpleDateFormat("E",Locale.getDefault()).format(date);
+            dayOfTheWeek = new SimpleDateFormat("E", Locale.getDefault()).format(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -143,6 +150,7 @@ public class Weather implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(timestamp);
+        dest.writeInt(iconResource);
         dest.writeInt(maxTempC);
         dest.writeInt(maxTempF);
         dest.writeInt(minTempC);

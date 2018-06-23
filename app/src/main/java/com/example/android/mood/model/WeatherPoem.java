@@ -20,6 +20,7 @@ public class WeatherPoem {
     @ColumnInfo(name = "weather")
     private String weather;
 
+
     public void setWeather(String weather) {
         this.weather = weather;
     }
@@ -37,7 +38,7 @@ public class WeatherPoem {
     private String mood;
 
 
-    public WeatherPoem(){
+    public WeatherPoem() {
 
     }
 
@@ -92,6 +93,4 @@ public class WeatherPoem {
     public void setTid(int tid) {
         this.tid = tid;
     }
-
-
 }

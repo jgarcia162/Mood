@@ -2,17 +2,18 @@ package com.example.android.mood.views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
+import com.example.android.mood.CustomRunnable;
 import com.example.android.mood.R;
 import com.example.android.mood.model.WeatherPoem;
 import com.example.android.mood.model.poems.Poem;
@@ -35,6 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
+@SuppressLint("CheckResult")
 public class MainActivity extends AppCompatActivity implements WatsonListener {
     private MoodDatabase database;
     private MoodApiHelper moodApiHelper;
@@ -46,29 +48,37 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     private FragmentManager fragmentManager;
     private int randomPoemIndex;
     private View rootView;
+    private PagerAdapter pagerAdapter;
+    private Handler handler;
 
-    private static final int NUM_PAGES = 2;
-    @BindView(R.id.bottom_navigation)
-    public BottomNavigationView bottomNavigationView;
+    @BindView(R.id.view_pager)
+    public ViewPager viewPager;
+    @BindView(R.id.tablayout)
+    public TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rootView = findViewById(R.id.activity_main_root);
+
         ButterKnife.bind(this);
         WatsonHelper.getInstance().configureToneAnalyzer(getApplicationContext());
 
         getDatabase();
-
         fragmentManager = getSupportFragmentManager();
-
         moodApiHelper = new MoodApiHelper();
         compositeDisposable = new CompositeDisposable();
 
 
-        Observable<Object> allDataObservable = createWeatherAndPoemObservables();
-        subscribeDataObserver(allDataObservable);
+        final Observable<Object> allDataObservable = createWeatherAndPoemObservables();
+
+        new CustomRunnable() {
+            @Override
+            public void run() {
+            }
+        };
+                subscribeDataObserver(allDataObservable);
 
 //        moodApiHelper
 //                .getRxAerisService()
@@ -77,36 +87,17 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
         //TODO remove this threadpolicy
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        setUpBottomNavigationBar();
-    }
-
-    private void setUpBottomNavigationBar() {
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_weather_item:
-                        showWeatherFragment();
-                        break;
-                    case R.id.menu_poems_item:
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, new PoemFragment(), "poem_fragment").addToBackStack("poem_fragment").commit();
-                        break;
-                    case 2:
-                        //TODO add profile fragment
-                }
-                return true;
-            }
-        });
     }
 
 
-    private Observable<List<Poem>> getPoemsObservable(String author) {
-        return moodApiHelper.getPoems(author);
-    }
+    private void setUpViewPager() {
 
-    private Observable<WeatherResponse> getAerisObservable(String location) {
-        return moodApiHelper.getDayForecast(location);
+
+        pagerAdapter = new ViewPagerAdapter(fragmentManager, weather);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
     private Observable<Object> createWeatherAndPoemObservables() {
@@ -117,7 +108,16 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
         return Observable.concat(weatherObservable, poemsObservable);
     }
 
-    @SuppressLint("CheckResult")
+    //TODO wrap these methods
+    private Observable<WeatherResponse> getAerisObservable(String location) {
+        return moodApiHelper.getWeekForecast(location);
+    }
+
+    private Observable<List<Poem>> getPoemsObservable(String author) {
+        return moodApiHelper.getPoems(author);
+    }
+
+
     private void subscribeDataObserver(Observable<Object> allDataObservable) {
         allDataObservable
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
     }
 
     private void getRandomPoem() {
-        randomPoemIndex = new Random().nextInt(poemList.size() );
+        randomPoemIndex = new Random().nextInt(poemList.size());
         randomPoem = poemList.get(randomPoemIndex);
     }
 
@@ -174,15 +174,6 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
         snackbar.show();
     }
 
-    private void showWeatherFragment() {
-        WeatherFragment weatherFragment = new WeatherFragment();
-        Bundle bundle = new Bundle();
-
-        bundle.putParcelable("weather", weather);
-        weatherFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, weatherFragment, "weather_fragment").addToBackStack("weather_fragment").commit();
-    }
 
     private void saveDataToRoom(final WeatherPoem data) {
         new Thread() {
@@ -216,10 +207,8 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
 
     @Override
     public void onPoemToneFetched(String tone) {
-        Log.d("POEM TONE", "onPoemToneFetched: " + tone);
         weatherPoem = new WeatherPoem(weather, randomPoem);
-        showWeatherFragment();
-
+        setUpViewPager();
         /*
         if (!weather.getTone().equals(tone)) {
             getRandomPoem();
@@ -230,6 +219,15 @@ public class MainActivity extends AppCompatActivity implements WatsonListener {
             showWeatherFragment();
         }*/
     }
+
+//    private void showWeatherFragment() {
+//        WeatherFragment weatherFragment = new WeatherFragment();
+//        Bundle bundle = new Bundle();
+//
+//        bundle.putParcelable("weather", weather);
+//        weatherFragment.setArguments(bundle);
+//        fragmentManager.beginTransaction().replace(R.id.fragment_container, weatherFragment, "weather_fragment").addToBackStack("weather_fragment").commit();
+//    }
 
     @Override
     public void onDestroy() {

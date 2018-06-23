@@ -40,25 +40,20 @@ public class WeatherFragment extends Fragment {
     private Weather weather;
     private List<Weather> weatherList;
     private Resources resources;
+    private MoodApiHelper moodApiHelper = new MoodApiHelper();
 
     @BindView(R.id.recyclerView)
     public RecyclerView weatherRecyclerView;
-
     @BindView(R.id.weather_date_tv)
     public TextView dayOfTheWeekTV;
-
     @BindView(R.id.temperature_tv)
     public TextView temperatureTV;
-
     @BindView(R.id.hi_low_tv)
     public TextView hiLowTV;
-
     @BindView(R.id.time_tv)
     public TextView timeTV;
-
     @BindView(R.id.weather_itemview_icon)
     public ElevationImageView elevationImageView;
-    private MoodApiHelper moodApiHelper = new MoodApiHelper();
 
 
     @Override
@@ -68,13 +63,11 @@ public class WeatherFragment extends Fragment {
         weather = getArguments().getParcelable("weather");
     }
 
-
     private void setUpRecyclerView(List<Weather> weatherList) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         weatherRecyclerView.setLayoutManager(manager);
         weatherRecyclerView.setAdapter(new WeatherAdapter(weatherList));
     }
-
 
     @Nullable
     @Override
@@ -108,9 +101,6 @@ public class WeatherFragment extends Fragment {
         getWeekForecast();
     }
 
-
-
-
     private Drawable getDrawable(String icon) {
         resources = Objects.requireNonNull(getContext()).getResources();
 
@@ -140,6 +130,10 @@ public class WeatherFragment extends Fragment {
                     @Override
                     public void onNext(WeatherResponse weatherResponse) {
                         weatherList = weatherResponse.getPeriods();
+
+                        for (Weather weather : weatherList) {
+                            weather.setIconResource(getIconResource(weather.getIcon()));
+                        }
                         setUpRecyclerView(weatherList);
                     }
 
@@ -153,6 +147,33 @@ public class WeatherFragment extends Fragment {
 
                     }
                 });
+    }
+
+    private int getIconResource(String icon) {
+        Resources resources = Objects.requireNonNull(getContext()).getResources();
+
+        String uri = "@drawable/".concat(icon);
+        uri = uri.replace(".png", "");
+
+        int imageResource = resources.getIdentifier(uri, null, Objects.requireNonNull(getContext()).getPackageName());
+
+        return imageResource == 0 ? R.drawable.clear:imageResource;
+    }
+
+    private Drawable getIconDrawable(String icon) {
+        Resources resources = Objects.requireNonNull(getContext()).getResources();
+
+        String uri = "@drawable/".concat(icon);
+        uri = uri.replace(".png", "");
+
+        int imageResource = resources.getIdentifier(uri, null, Objects.requireNonNull(getContext()).getPackageName());
+
+        if (imageResource == 0) {
+            imageResource = WeatherUtils.getAlternateResourceId(icon);
+            return resources.getDrawable(imageResource, null);
+        } else {
+            return resources.getDrawable(imageResource, null);
+        }
     }
 
     private Observable<WeatherResponse> getAerisObservable(String location) {

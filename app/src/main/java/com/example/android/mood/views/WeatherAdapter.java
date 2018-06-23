@@ -1,7 +1,5 @@
 package com.example.android.mood.views;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,11 +9,10 @@ import android.widget.TextView;
 
 import com.example.android.mood.R;
 import com.example.android.mood.model.weather.Weather;
-import com.example.android.mood.model.weather.WeatherUtils;
 import com.qhutch.elevationimageview.ElevationImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,27 +62,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
         public void bind(Weather data) {
             String icon = data.getIcon();
-            Drawable iconDrawable = getDrawable(icon);
-
-            elevationImageView.setImageDrawable(iconDrawable);
+            Picasso.get().load(data.getIconResource()).into(elevationImageView);
+//            elevationImageView.setImageDrawable(iconDrawable);
             dateTV.setText(data.getFullDayOfTheWeekName());
             weatherTV.setText(String.valueOf(data.getMaxTempF()));
         }
 
-        private Drawable getDrawable(String icon) {
-            Resources resources = Objects.requireNonNull(itemView.getContext()).getResources();
 
-            String uri = "@drawable/".concat(icon);
-            uri = uri.replace(".png", "");
-
-            int imageResource = resources.getIdentifier(uri, null, Objects.requireNonNull(itemView.getContext()).getPackageName());
-
-            if (imageResource == 0) {
-                imageResource = WeatherUtils.getAlternateResourceId(icon);
-                return resources.getDrawable(imageResource, null);
-            } else {
-                return resources.getDrawable(imageResource, null);
-            }
-        }
     }
 }
